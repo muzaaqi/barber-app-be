@@ -2,7 +2,7 @@ from app import db
 from datetime import datetime
 
 class HaircutModels(db.Model):
-    id = db.Column(db.UUID, primary_key=True)
+    id = db.Column(db.Integer, primary_key=True, autoincrement=True)
     name = db.Column(db.String(128), nullable=False)
     description = db.Column(db.String(256), nullable=True)
     image_url = db.Column(db.String(256), nullable=True)
