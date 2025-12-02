@@ -19,3 +19,12 @@ def get_model_by_id(model_id):
         return response.ok(data, "Successfully retrieved haircut model")
     except Exception as e:
         return response.internal_server_error(str(e))
+
+def create_model(model_data):
+    try:
+        new_model = HaircutModels(**model_data)
+        new_model.save()
+        data = new_model.to_dict()
+        return response.created(data, "Successfully created haircut model")
+    except Exception as e:
+        return response.internal_server_error(str(e))
