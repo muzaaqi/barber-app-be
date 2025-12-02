@@ -2,7 +2,7 @@ from app.model.haircut_models import HaircutModels
 from app.modules import response
 from app.modules.transform import transform
 
-def get_haircut_models():
+def get_models():
     try:
         haircut_models = HaircutModels.query.all()
         data = transform(haircut_models)
@@ -10,7 +10,7 @@ def get_haircut_models():
     except Exception as e:
         return response.internal_server_error(str(e))
 
-def get_haircut_model_by_id(model_id):
+def get_model_by_id(model_id):
     try:
         haircut_model = HaircutModels.query.get(model_id)
         if not haircut_model:
