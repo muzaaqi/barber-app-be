@@ -1,5 +1,5 @@
 from flask import Flask
-from app.model import models
+from app.model import haircut_models
 from config import Config
 from flask_sqlalchemy import SQLAlchemy
 from flask_migrate import Migrate
