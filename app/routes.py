@@ -1,5 +1,5 @@
-from flask import Blueprint
-from app.controller.haircut_models_controller import get_models, get_model_by_id
+from flask import Blueprint, request
+from app.controller.haircut_models_controller import create_model, get_models, get_model_by_id
 
 bp = Blueprint('api', __name__, url_prefix='/api')
 
@@ -15,3 +15,8 @@ def get_haircut_models():
 @bp.route('/haircut-models/<int:model_id>', methods=['GET'])
 def get_haircut_model_by_id(model_id):
     return get_model_by_id(model_id)
+
+@bp.route('/haircut-models', methods=['POST'])
+def create_haircut_model():
+    new_model = request.get_json()
+    return create_model(new_model)
