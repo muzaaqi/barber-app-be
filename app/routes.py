@@ -11,3 +11,7 @@ def index():
 @bp.route('/haircut-models', methods=['GET'])
 def get_haircut_models():
     return get_models()
+
+@bp.route('/haircut-models/<int:model_id>', methods=['GET'])
+def get_haircut_model_by_id(model_id):
+    return get_model_by_id(model_id)
