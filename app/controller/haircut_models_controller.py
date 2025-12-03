@@ -1,6 +1,7 @@
 from app.model.haircut_models import HaircutModels
 from app.modules import response
 from app.modules.transform import transform
+from app.modules.upload_r2 import upload_image
 
 def get_models():
     try:
@@ -22,6 +23,9 @@ def get_model_by_id(model_id):
 
 def create_model(model_data):
     try:
+        res = upload_image(model_data.get("name"))
+        if res == None or res[1] != 200:
+            return response.bad_request("Image upload failed")
         new_model = HaircutModels(**model_data)
         new_model.save()
         data = new_model.to_dict()
