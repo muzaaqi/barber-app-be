@@ -1,7 +1,7 @@
 from flask import request, jsonify
 from app.r2_config import s3, R2_BUCKET, R2_ENDPOINT
 
-def upload_image(name):
+def upload_image(name, dir:str):
     if 'image' not in request.files:
         return jsonify({"error": "No image uploaded"}), 400
 
@@ -16,7 +16,7 @@ def upload_image(name):
         ExtraArgs={"ContentType": file.content_type}
     )
 
-    public_url = f"{R2_ENDPOINT}/{R2_BUCKET}/{filename}"
+    public_url = f"{R2_ENDPOINT}/{R2_BUCKET}/{dir}/{filename}"
 
     return jsonify({
         "filename": filename,
