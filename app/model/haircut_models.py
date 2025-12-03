@@ -5,7 +5,7 @@ class HaircutModels(db.Model):
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
     name = db.Column(db.String(128), nullable=False)
     description = db.Column(db.String(256), nullable=True)
-    image_url = db.Column(db.String(256), nullable=True)
+    image_url = db.Column(db.String(256), nullable=False)
     choosen_count = db.Column(db.Integer, default=0)
     created_at = db.Column(db.DateTime, default=datetime.utcnow)
     updated_at = db.Column(db.DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)

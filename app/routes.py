@@ -1,5 +1,5 @@
 from flask import Blueprint, request
-from app.controller.haircut_models_controller import create_model, get_models, get_model_by_id
+from app.controller.haircut_models import create_model, get_models, get_model_by_id
 
 bp = Blueprint('api', __name__, url_prefix='/api')
 

@@ -1,8 +1,8 @@
 """create haircut models table
 
-Revision ID: 2e0e9d57d773
+Revision ID: 2aaaf9a2a06c
 Revises: 
-Create Date: 2025-12-02 22:38:55.906597
+Create Date: 2025-12-03 07:39:21.687188
 
 """
 from alembic import op
@@ -10,7 +10,7 @@ import sqlalchemy as sa
 
 
 # revision identifiers, used by Alembic.
-revision = '2e0e9d57d773'
+revision = '2aaaf9a2a06c'
 down_revision = None
 branch_labels = None
 depends_on = None
