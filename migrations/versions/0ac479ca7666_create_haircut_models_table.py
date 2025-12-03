@@ -1,8 +1,8 @@
 """create haircut models table
 
-Revision ID: 2aaaf9a2a06c
+Revision ID: 0ac479ca7666
 Revises: 
-Create Date: 2025-12-03 07:39:21.687188
+Create Date: 2025-12-03 22:06:29.412587
 
 """
 from alembic import op
@@ -10,7 +10,7 @@ import sqlalchemy as sa
 
 
 # revision identifiers, used by Alembic.
-revision = '2aaaf9a2a06c'
+revision = '0ac479ca7666'
 down_revision = None
 branch_labels = None
 depends_on = None
@@ -22,7 +22,7 @@ def upgrade():
     sa.Column('id', sa.Integer(), autoincrement=True, nullable=False),
     sa.Column('name', sa.String(length=128), nullable=False),
     sa.Column('description', sa.String(length=256), nullable=True),
-    sa.Column('image_url', sa.String(length=256), nullable=True),
+    sa.Column('image_url', sa.String(length=256), nullable=False),
     sa.Column('choosen_count', sa.Integer(), nullable=True),
     sa.Column('created_at', sa.DateTime(), nullable=True),
     sa.Column('updated_at', sa.DateTime(), nullable=True),
