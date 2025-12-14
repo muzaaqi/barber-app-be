@@ -22,3 +22,9 @@ def upload_image(name, dir:str):
         "filename": filename,
         "url": public_url
     })
+
+def delete_image(pubolic_url):
+    s3.delete_object(
+        Bucket=R2_BUCKET,
+        Key=pubolic_url.split("/")[-1]
+    )
