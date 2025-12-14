@@ -6,14 +6,31 @@ from app.modules.upload_r2 import delete_image, upload_image
 
 haircut_bp = Blueprint('haircut', __name__, url_prefix='/haircuts')
 
+
 @haircut_bp.route('/', methods=['GET'])
 def get_models():
     try:
-        haircut_models = HaircutModels.query.order_by(HaircutModels.choosen_count.desc()).all()
-        data = transform(haircut_models)
-        return response.ok(data, "Successfully retrieved haircut models")
-    except Exception as e:
-        return response.internal_server_error(str(e))
+        page = request.args.get("page", 1, type=int)
+        limit = request.args.get("limit", 10, type=int)
+
+        pagination = HaircutModels.query \
+            .order_by(HaircutModels.choosen_count.desc()) \
+            .paginate(page=page, per_page=limit, error_out=False)
+
+        data = transform(pagination.items)
+
+        return response.ok({
+            "data": data,
+            "pagination": {
+                "page": page,
+                "limit": limit,
+                "total": pagination.total
+            }
+        }, "Successfully retrieved haircut models")
+
+    except Exception:
+        return response.internal_server_error("Internal server error")
+
 
 @haircut_bp.route('/<int:model_id>', methods=['GET'])
 def get_model_by_id(model_id):
@@ -21,25 +38,54 @@ def get_model_by_id(model_id):
         haircut_model = HaircutModels.query.get(model_id)
         if not haircut_model:
             return response.not_found("Haircut model not found")
-        data = haircut_model.to_dict()
-        return response.ok(data, "Successfully retrieved haircut model")
-    except Exception as e:
-        return response.internal_server_error(str(e))
+
+        return response.ok(
+            haircut_model.to_dict(),
+            "Successfully retrieved haircut model"
+        )
+
+    except Exception:
+        return response.internal_server_error("Internal server error")
+
 
 @haircut_bp.route('/', methods=['POST'])
 def create_model():
     try:
         model_data = request.get_json()
-        res = upload_image(model_data.get("name"), "haircut-models")
-        if res == None or res[1] != 200:
+        if not model_data:
+            return response.bad_request("Request body is empty")
+
+        required_fields = ["name", "description", "price"]
+        if not all(field in model_data for field in required_fields):
+            return response.bad_request("Missing required fields")
+
+        upload_result = upload_image(model_data["name"], "haircut-models")
+        if not upload_result or upload_result[1] != 200:
             return response.bad_request("Image upload failed")
-        
-        new_model = HaircutModels(**model_data, image_url=res[0]['url'])
-        new_model.insert()
-        data = new_model.to_dict()
-        return response.created(data, "Successfully created haircut model")
-    except Exception as e:
-        return response.internal_server_error(str(e))
+
+        image_url = upload_result[0]["url"]
+
+        new_model = HaircutModels(
+            name=model_data["name"],
+            description=model_data["description"],
+            price=model_data["price"],
+            image_url=image_url
+        )
+
+        try:
+            new_model.insert()
+        except Exception:
+            delete_image(image_url)
+            raise
+
+        return response.created(
+            new_model.to_dict(),
+            "Successfully created haircut model"
+        )
+
+    except Exception:
+        return response.internal_server_error("Internal server error")
+
 
 @haircut_bp.route('/<int:model_id>', methods=['PUT'])
 def update_model(model_id):
@@ -63,18 +109,22 @@ def update_model(model_id):
             if not upload_result or upload_result[1] != 200:
                 return response.bad_request("Image upload failed")
 
-            delete_image(haircut_model.image_url)
-            haircut_model.image_url = upload_result[0]
+            new_image_url = upload_result[0]["url"]
 
+            delete_image(haircut_model.image_url)
+            haircut_model.image_url = new_image_url
+
+        # Update allowed fields only
         for field in allowed_fields:
             if field in model_data:
                 setattr(haircut_model, field, model_data[field])
 
         haircut_model.update()
+
         return response.ok(
             haircut_model.to_dict(),
             "Successfully updated haircut model"
         )
 
-    except Exception as e:
-        return response.internal_server_error(str(e))
+    except Exception:
+        return response.internal_server_error("Internal server error")
