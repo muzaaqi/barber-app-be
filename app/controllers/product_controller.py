@@ -33,7 +33,7 @@ def get_products():
         return response.internal_server_error("Internal server error")
 
 
-@product_bp.route('/<int:product_id>', methods=['GET'])
+@product_bp.route('/<string:product_id>', methods=['GET'])
 def get_product_by_id(product_id):
     try:
         product = Product.query.get(product_id)
@@ -90,7 +90,7 @@ def create_product():
         return response.internal_server_error("Internal server error")
 
 
-@product_bp.route('/<int:product_id>', methods=['PUT'])
+@product_bp.route('/<string:product_id>', methods=['PUT'])
 def update_product(product_id):
     try:
         product = Product.query.get(product_id)
@@ -128,7 +128,7 @@ def update_product(product_id):
         return response.internal_server_error("Internal server error")
 
 
-@product_bp.route('/<int:product_id>', methods=['DELETE'])
+@product_bp.route('/<string:product_id>', methods=['DELETE'])
 def delete_product(product_id):
     try:
         product = Product.query.get(product_id)
