@@ -10,6 +10,7 @@ class Product(db.Model):
     description = db.Column(db.String(255), nullable=True)
     price = db.Column(db.Float, nullable=False)
     image_url = db.Column(db.String(255), nullable=True)
+    stock = db.Column(db.Integer, nullable=False, default=0)
     created_at = db.Column(db.DateTime, default=datetime.utcnow)
     updated_at = db.Column(db.DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
 
