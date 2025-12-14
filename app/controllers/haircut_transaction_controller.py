@@ -58,7 +58,8 @@ def get_haircut_transactions_by_user_id():
         limit = request.args.get("limit", 10, type=int)
 
         pagination = HaircutTransaction.query \
-            .filter_by(user_id=user_id) \
+            .join(Transaction, HaircutTransaction.transaction_id == Transaction.id) \
+            .filter(Transaction.user_id == user_id) \
             .order_by(HaircutTransaction.created_at.desc()) \
             .paginate(page=page, per_page=limit, error_out=False)
 
