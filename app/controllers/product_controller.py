@@ -56,6 +56,7 @@ def create_product():
         price = request.form.get("price")
         description = request.form.get("description")
         image = request.files.get("image")
+        stock = request.form.get("stock", 0)
 
         if not all([name, price, description, image]):
             return response.bad_request("All fields are required")
@@ -70,7 +71,8 @@ def create_product():
             name=name.strip(),
             price=price,
             description=description.strip(),
-            image_url=image_url
+            image_url=image_url,
+            stock=stock
         )
 
         try:
@@ -93,17 +95,23 @@ def create_product():
 @product_bp.route('/<string:product_id>', methods=['PUT'])
 def update_product(product_id):
     try:
+        product_data = request.get_json()
+        if not product_data:
+            return response.bad_request("Request body is empty")
+        
         product = Product.query.get(product_id)
         if not product:
             return response.not_found("Product not found")
 
-        name = request.form.get("name", product.name)
-        price = request.form.get("price", product.price)
-        description = request.form.get("description", product.description)
+        name = product_data.get("name", product.name)
+        price = product_data.get("price", product.price)
+        description = product_data.get("description", product.description)
         image = request.files.get("image")
+        stock = int(product_data.get("stock", product.stock))
 
         if image:
             upload_result = upload_image(name, "products")
+            
             if not upload_result or upload_result[1] != 200:
                 return response.bad_request("Image upload failed")
 
@@ -111,10 +119,13 @@ def update_product(product_id):
 
             delete_image(product.image_url)
             product.image_url = new_image_url
+        else:
+            product.image_url = product.image_url
 
-        product.name = name.strip()
+        product.name = name
         product.price = price
-        product.description = description.strip()
+        product.description = description
+        product.stock = int(stock)
 
         db.session.commit()
 
