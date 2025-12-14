@@ -1,9 +1,10 @@
 from flask import Flask
 from flask_cors import CORS
+from flask_jwt_extended import JWTManager
 from flask_sqlalchemy import SQLAlchemy
 from flask_migrate import Migrate
 from config import Config
-from app import model
+from app import models
 
 db = SQLAlchemy()
 migrate = Migrate()
@@ -13,11 +14,12 @@ def create_app():
     app.config.from_object(Config)
     
     CORS(app, resources={r"/*": {"origins": ["https://bergas.muzaaqi.my.id", "http://localhost:3000", "http://127.0.0.1:5000"]}})
+    JWTManager(app)
 
     db.init_app(app)
     migrate.init_app(app, db)
 
-    from app.routes import bp as routes_bp
-    app.register_blueprint(routes_bp)
+    from app.routes import api
+    app.register_blueprint(api)
 
     return app
