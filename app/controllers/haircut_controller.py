@@ -100,13 +100,13 @@ def update_model(model_id):
         if not haircut_model:
             return response.not_found("Haircut model not found")
 
-        allowed_fields = ["name", "description", "price"]
+        name = model_data.get("name", haircut_model.name)
+        description = model_data.get("description", haircut_model.description)
+        image = request.files.get("image")
+        choosen_count = int(haircut_model.choosen_count)
 
-        if model_data.get("image"):
-            upload_result = upload_image(
-                model_data.get("name", haircut_model.name),
-                "haircut-models"
-            )
+        if image:
+            upload_result = upload_image(name, "haircut-models")
 
             if not upload_result or upload_result[1] != 200:
                 return response.bad_request("Image upload failed")
@@ -115,12 +115,14 @@ def update_model(model_id):
 
             delete_image(haircut_model.image_url)
             haircut_model.image_url = new_image_url
+        else:
+            haircut_model.image_url = haircut_model.image_url
 
-        for field in allowed_fields:
-            if field in model_data:
-                setattr(haircut_model, field, model_data[field])
+        haircut_model.name = name
+        haircut_model.description = description
+        haircut_model.choosen_count = int(choosen_count)
 
-        haircut_model.update()
+        db.session.commit()
 
         return response.ok(
             haircut_model.to_dict(),
