@@ -13,3 +13,8 @@ class Config(object):
     )
     SQLALCHEMY_TRACK_MODIFICATIONS = False
     SQLALCHEMY_RECORD_QUERIES = True
+    JWT_COOKIE_CSRF_PROTECT = False
+    JWT_TOKEN_LOCATION = ["headers"]
+    SECRET_KEY = os.environ.get('SECRET_KEY')
+    JWT_SECRET_KEY = os.environ.get('JWT_SECRET_KEY')
+    JWT_ACCESS_TOKEN_EXPIRES = 3600
