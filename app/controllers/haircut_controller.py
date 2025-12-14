@@ -1,8 +1,9 @@
 from flask import Blueprint, request
-from app.models.haircut import HaircutModels
+from app.models.haircut import Haircut
 from app.modules import response
 from app.modules.transform import transform
 from app.modules.upload_r2 import delete_image, upload_image
+from app import db
 
 haircut_bp = Blueprint('haircut', __name__, url_prefix='/haircuts')
 
@@ -13,8 +14,8 @@ def get_models():
         page = request.args.get("page", 1, type=int)
         limit = request.args.get("limit", 10, type=int)
 
-        pagination = HaircutModels.query \
-            .order_by(HaircutModels.choosen_count.desc()) \
+        pagination = Haircut.query \
+            .order_by(Haircut.choosen_count.desc()) \
             .paginate(page=page, per_page=limit, error_out=False)
 
         data = transform(pagination.items)
@@ -32,10 +33,10 @@ def get_models():
         return response.internal_server_error("Internal server error")
 
 
-@haircut_bp.route('/<int:model_id>', methods=['GET'])
+@haircut_bp.route('/<string:model_id>', methods=['GET'])
 def get_model_by_id(model_id):
     try:
-        haircut_model = HaircutModels.query.get(model_id)
+        haircut_model = Haircut.query.get(model_id)
         if not haircut_model:
             return response.not_found("Haircut model not found")
 
@@ -65,7 +66,7 @@ def create_model():
 
         image_url = upload_result[0]["url"]
 
-        new_model = HaircutModels(
+        new_model = Haircut(
             name=model_data["name"],
             description=model_data["description"],
             price=model_data["price"],
@@ -84,17 +85,18 @@ def create_model():
         )
 
     except Exception:
+        db.session.rollback()
         return response.internal_server_error("Internal server error")
 
 
-@haircut_bp.route('/<int:model_id>', methods=['PUT'])
+@haircut_bp.route('/<string:model_id>', methods=['PUT'])
 def update_model(model_id):
     try:
         model_data = request.get_json()
         if not model_data:
             return response.bad_request("Request body is empty")
 
-        haircut_model = HaircutModels.query.get(model_id)
+        haircut_model = Haircut.query.get(model_id)
         if not haircut_model:
             return response.not_found("Haircut model not found")
 
@@ -114,7 +116,6 @@ def update_model(model_id):
             delete_image(haircut_model.image_url)
             haircut_model.image_url = new_image_url
 
-        # Update allowed fields only
         for field in allowed_fields:
             if field in model_data:
                 setattr(haircut_model, field, model_data[field])
@@ -127,4 +128,24 @@ def update_model(model_id):
         )
 
     except Exception:
+        db.session.rollback()
+        return response.internal_server_error("Internal server error")
+    
+@haircut_bp.route('/<string:model_id>', methods=['DELETE'])
+def delete_model(model_id):
+    try:
+        haircut_model = Haircut.query.get(model_id)
+        if not haircut_model:
+            return response.not_found("Haircut model not found")
+
+        delete_image(haircut_model.image_url)
+        haircut_model.delete()
+
+        return response.ok(
+            {},
+            "Successfully deleted haircut model"
+        )
+
+    except Exception:
+        db.session.rollback()
         return response.internal_server_error("Internal server error")
