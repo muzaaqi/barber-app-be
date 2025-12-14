@@ -1,22 +1,8 @@
-from flask import Blueprint, request
-from app.controller.haircut_models import create_model, get_models, get_model_by_id
+from flask import Blueprint
+from app.controllers.haircut_controller import haircut_bp
+from app.controllers.user_controller import user_bp
 
-bp = Blueprint('api', __name__, url_prefix='/api')
+api = Blueprint('api', __name__, url_prefix='/api')
 
-@bp.route('/')
-@bp.route('/index')
-def index():
-    return "Welcome to the Barber App API"
-
-@bp.route('/haircut-models', methods=['GET'])
-def get_haircut_models():
-    return get_models()
-
-@bp.route('/haircut-models/<int:model_id>', methods=['GET'])
-def get_haircut_model_by_id(model_id):
-    return get_model_by_id(model_id)
-
-@bp.route('/haircut-models', methods=['POST'])
-def create_haircut_model():
-    new_model = request.get_json()
-    return create_model(new_model)
+api.register_blueprint(haircut_bp)
+api.register_blueprint(user_bp)
