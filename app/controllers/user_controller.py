@@ -107,3 +107,80 @@ def get_profile():
 
     except Exception:
         return response.internal_server_error("Internal server error")
+
+@user_bp.route("/me", methods=["PUT"])
+@jwt_required()
+def update_profile():
+    try:
+        uid = get_jwt_identity()
+        user = User.query.get(uid)
+
+        if not user:
+            return response.not_found("User not found")
+
+        data = request.get_json()
+        if not data:
+            return response.bad_request("Request body is empty")
+
+        name = data.get("name", user.name).strip()
+        email = data.get("email", user.email).strip().lower()
+
+        if email != user.email and User.query.filter_by(email=email).first():
+            return response.bad_request("Email already exists")
+
+        user.name = name
+        user.email = email
+
+        db.session.commit()
+
+        return response.ok(
+            {
+                "id": user.id,
+                "email": user.email,
+                "name": user.name
+            },
+            "Profile updated successfully"
+        )
+
+    except Exception:
+        db.session.rollback()
+        return response.internal_server_error("Internal server error")
+
+@user_bp.route("/me/password", methods=["PUT"])
+@jwt_required()
+def change_password():
+    try:
+        uid = get_jwt_identity()
+        user = User.query.get(uid)
+
+        if not user:
+            return response.not_found("User not found")
+
+        data = request.get_json()
+        if not data:
+            return response.bad_request("Request body is empty")
+
+        required_fields = ["current_password", "new_password"]
+        if not all(field in data for field in required_fields):
+            return response.bad_request("Missing required fields")
+
+        current_password = data["current_password"]
+        new_password = data["new_password"]
+
+        if not check_password_hash(user.password, current_password):
+            return response.unauthorized("Current password is incorrect")
+
+        if len(new_password) < 6:
+            return response.bad_request("New password must be at least 6 characters")
+
+        user.password = generate_password_hash(new_password)
+        db.session.commit()
+
+        return response.ok(
+            {},
+            "Password changed successfully"
+        )
+
+    except Exception:
+        db.session.rollback()
+        return response.internal_server_error("Internal server error")
