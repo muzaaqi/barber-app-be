@@ -1,5 +1,5 @@
 from flask import request, jsonify
-from app.r2_config import s3, R2_BUCKET, R2_ENDPOINT
+from r2_config import s3, R2_BUCKET, R2_ENDPOINT
 
 def upload_image(name, dir:str):
     if 'image' not in request.files:
