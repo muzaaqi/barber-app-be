@@ -122,7 +122,7 @@ def update_profile():
         if not data:
             return response.bad_request("Request body is empty")
 
-        name = data.get("name", user.name).strip()
+        name = data.get("name", user.name)
         email = data.get("email", user.email).strip().lower()
 
         if email != user.email and User.query.filter_by(email=email).first():
