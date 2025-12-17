@@ -1,9 +1,11 @@
 from flask import Blueprint, request
+from flask_jwt_extended import (jwt_required, get_jwt_identity)
 from app.models.product import Product
 from app.modules import response
 from app.modules.transform import transform
 from app.modules.upload_r2 import delete_image, upload_image
 from app import db
+from app.models.user import User
 
 product_bp = Blueprint('product', __name__, url_prefix='/products')
 
@@ -14,9 +16,7 @@ def get_products():
         page = request.args.get("page", 1, type=int)
         limit = request.args.get("limit", 10, type=int)
 
-        pagination = Product.query \
-            .order_by(Product.choosen.desc()) \
-            .paginate(page=page, per_page=limit, error_out=False)
+        pagination = Product.query.paginate(page=page, per_page=limit, error_out=False)
 
         data = transform(pagination.items)
 
@@ -50,36 +50,44 @@ def get_product_by_id(product_id):
 
 
 @product_bp.route('/', methods=['POST'])
+@jwt_required()
 def create_product():
     try:
+        uid = get_jwt_identity()
+        current_user = User.query.get(uid)
+        if current_user.role != 'admin':
+            return response.unauthorized("Admin access required")
+        
         name = request.form.get("name")
         price = request.form.get("price")
         description = request.form.get("description")
-        image = request.files.get("image")
         stock = request.form.get("stock", 0)
+        image = request.files.get("image")
 
-        if not all([name, price, description, image]):
-            return response.bad_request("All fields are required")
+        if not name or not price:
+            return response.bad_request("Name and price are required")
 
-        upload_result = upload_image(name, "products")
-        if not upload_result or upload_result[1] != 200:
+        upload_result = upload_image(name, image, "products")
+        if not upload_result:
             return response.bad_request("Image upload failed")
 
-        image_url = upload_result[0]["url"]
+        image_url = upload_result["url"]
+        image_key = upload_result["key"]
 
         new_product = Product(
-            name=name.strip(),
-            price=price,
-            description=description.strip(),
+            name=name,
+            description=description,
+            price=float(price),
             image_url=image_url,
-            stock=stock
+            image_key=image_key,
+            stock=int(stock)
         )
 
         try:
             db.session.add(new_product)
             db.session.commit()
         except Exception:
-            delete_image(image_url)
+            delete_image(image_key)
             raise
 
         return response.created(
@@ -93,9 +101,15 @@ def create_product():
 
 
 @product_bp.route('/<string:product_id>', methods=['PUT'])
+@jwt_required()
 def update_product(product_id):
     try:
-        product_data = request.get_json()
+        uid = get_jwt_identity()
+        current_user = User.query.get(uid)
+        if current_user.role != 'admin':
+            return response.unauthorized("Admin access required")
+        
+        product_data = request.form.to_dict()
         if not product_data:
             return response.bad_request("Request body is empty")
         
@@ -110,17 +124,17 @@ def update_product(product_id):
         stock = int(product_data.get("stock", product.stock))
 
         if image:
-            upload_result = upload_image(name, "products")
+            upload_result = upload_image(name, image, "products")
             
-            if not upload_result or upload_result[1] != 200:
+            if not upload_result:
                 return response.bad_request("Image upload failed")
 
-            new_image_url = upload_result[0]["url"]
+            new_image_url = upload_result["url"]
+            new_image_key = upload_result["key"]
 
-            delete_image(product.image_url)
+            delete_image(product.image_key)
             product.image_url = new_image_url
-        else:
-            product.image_url = product.image_url
+            product.image_key = new_image_key
 
         product.name = name
         product.price = price
@@ -140,13 +154,19 @@ def update_product(product_id):
 
 
 @product_bp.route('/<string:product_id>', methods=['DELETE'])
+@jwt_required()
 def delete_product(product_id):
     try:
+        uid = get_jwt_identity()
+        current_user = User.query.get(uid)
+        if current_user.role != 'admin':
+            return response.unauthorized("Admin access required")
+        
         product = Product.query.get(product_id)
         if not product:
             return response.not_found("Product not found")
 
-        delete_image(product.image_url)
+        delete_image(product.image_key)
 
         db.session.delete(product)
         db.session.commit()
