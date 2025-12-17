@@ -6,9 +6,10 @@ class Haircut(db.Model):
     __tablename__ = 'haircuts'
     
     id = db.Column(db.String(36), primary_key=True, default=lambda: str(uuid4()))
-    name = db.Column(db.String(128), nullable=False)
-    description = db.Column(db.String(256), nullable=True)
-    image_url = db.Column(db.String(256), nullable=False)
+    name = db.Column(db.String(50), nullable=False)
+    description = db.Column(db.String(500), nullable=True)
+    image_url = db.Column(db.String(255), nullable=False)
+    image_key = db.Column(db.String(255), nullable=False)
     choosen_count = db.Column(db.Integer, default=0)
     created_at = db.Column(db.DateTime, default=datetime.utcnow)
     updated_at = db.Column(db.DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
