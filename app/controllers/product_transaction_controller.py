@@ -11,6 +11,7 @@ from app.modules.transform import transform_data
 product_transaction_bp = Blueprint('product_transaction', __name__, url_prefix='/product-transactions')
 
 @product_transaction_bp.route('/', methods=['GET'])
+@jwt_required()
 def get_product_transactions():
     try:
         page = request.args.get("page", 1, type=int)
@@ -36,6 +37,7 @@ def get_product_transactions():
         return response.internal_server_error("Internal server error")
 
 @product_transaction_bp.route('/<string:transaction_id>', methods=['GET'])
+@jwt_required()
 def get_product_transaction_by_id(transaction_id):
     try:
         product_transaction = ProductTransaction.query \
@@ -56,6 +58,7 @@ def get_product_transaction_by_id(transaction_id):
         return response.internal_server_error("Internal server error")
 
 @product_transaction_bp.route('/', methods=['GET'])
+@jwt_required()
 def get_product_transactions_by_user_id():
     try:
         user_id = request.args.get("user_id", type=str)
@@ -86,6 +89,7 @@ def get_product_transactions_by_user_id():
         return response.internal_server_error("Internal server error")
 
 @product_transaction_bp.route('/', methods=['POST'])
+@jwt_required()
 def create_product_transaction():
     try:
         data = request.get_json()
@@ -128,6 +132,7 @@ def create_product_transaction():
         return response.internal_server_error("Internal server error")
 
 @product_transaction_bp.route('/<string:transaction_id>', methods=['PUT'])
+@jwt_required()
 def update_product_transaction(transaction_id):
     try:
         product_transaction = ProductTransaction.query.get(transaction_id)
@@ -154,6 +159,7 @@ def update_product_transaction(transaction_id):
         return response.internal_server_error("Internal server error")
 
 @product_transaction_bp.route('/<string:transaction_id>', methods=['DELETE'])
+@jwt_required()
 def delete_product_transaction(transaction_id):
     try:
         product_transaction = ProductTransaction.query.get(transaction_id)
