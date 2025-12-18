@@ -8,10 +8,14 @@ class ProductTransaction(db.Model):
     __tablename__ = 'product_transactions'
 
     id = db.Column(db.String(36), primary_key=True, default=lambda: str(uuid4()))
-    user_id = db.Column(db.Integer, db.ForeignKey(User.id), nullable=False)
-    product_id = db.Column(db.Integer, db.ForeignKey(Product.id), nullable=False)
+    user_id = db.Column(db.String(36), db.ForeignKey(User.id), nullable=False)
+    product_id = db.Column(db.String(36), db.ForeignKey(Product.id), nullable=False)
     quantity = db.Column(db.Integer, nullable=False)
     total_price = db.Column(db.Float, nullable=False)
+    expedition_service = db.Column(db.String(100), nullable=False)
+    expedition_status = db.Column(db.String(50), default='pending')
+    payment_method = db.Column(db.String(50), nullable=False, default='cash') 
+    payment_status = db.Column(db.String(50), nullable=False, default='unpaid')
     created_at = db.Column(db.DateTime, default=datetime.utcnow)
     updated_at = db.Column(db.DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
 
