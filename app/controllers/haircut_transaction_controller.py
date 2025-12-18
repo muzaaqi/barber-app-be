@@ -5,7 +5,7 @@ from app.models.haircut_transactions import HaircutTransaction
 from app.models.user import User
 from app.models.haircut import Haircut
 from app.modules import response
-from app.modules.transform import transform, transform_with_user
+from app.modules.transform import transform_data
 from app import db
 
 haircut_transaction_bp = Blueprint('haircut_transaction', __name__, url_prefix='/haircut-transactions')
@@ -22,12 +22,11 @@ def get_haircut_transactions():
         limit = request.args.get("limit", 10, type=int)
 
         pagination = HaircutTransaction.query \
-            .options(joinedload(HaircutTransaction.user)) \
+            .options(joinedload(HaircutTransaction.user), joinedload(HaircutTransaction.haircut)) \
             .order_by(HaircutTransaction.created_at.desc()) \
             .paginate(page=page, per_page=limit, error_out=False)
 
-        data = transform_with_user(pagination.items)
-
+        data = transform_data(pagination.items, relations={"user": ['name', 'email'], "haircut": ['name', 'image_url']})
         return response.ok({
             "data": data,
             "pagination": {
@@ -44,12 +43,16 @@ def get_haircut_transactions():
 @jwt_required()
 def get_haircut_transaction_by_id(transaction_id):
     try:
-        haircut_transaction = HaircutTransaction.query.get(transaction_id)
+        haircut_transaction = HaircutTransaction.query \
+            .options(joinedload(HaircutTransaction.haircut)) \
+            .get(transaction_id)
         if not haircut_transaction:
             return response.not_found("Haircut transaction not found")
+        
+        data = transform_data([haircut_transaction], relations={"haircut": ['name', 'image_url']})[0]
 
         return response.ok(
-            haircut_transaction.to_dict(),
+            data,
             "Successfully retrieved haircut transaction"
         )
 
@@ -66,11 +69,12 @@ def get_haircut_transactions_by_user_id():
         limit = request.args.get("limit", 10, type=int)
 
         pagination = HaircutTransaction.query \
+            .options(joinedload(HaircutTransaction.haircut)) \
             .filter(HaircutTransaction.user_id == user_id) \
             .order_by(HaircutTransaction.created_at.desc()) \
             .paginate(page=page, per_page=limit, error_out=False)
 
-        data = transform(pagination.items)
+        data = transform_data(pagination.items, relations={"haircut": ['name', 'image_url']})
 
         return response.ok({
             "data": data,

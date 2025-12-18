@@ -2,7 +2,7 @@ from flask import Blueprint, request
 from flask_jwt_extended import (jwt_required, get_jwt_identity)
 from app.models.product import Product
 from app.modules import response
-from app.modules.transform import transform
+from app.modules.transform import transform_data
 from app.modules.upload_r2 import delete_image, upload_image
 from app import db
 from app.models.user import User
@@ -18,7 +18,7 @@ def get_products():
 
         pagination = Product.query.paginate(page=page, per_page=limit, error_out=False)
 
-        data = transform(pagination.items)
+        data = transform_data(pagination.items)
 
         return response.ok({
             "data": data,
