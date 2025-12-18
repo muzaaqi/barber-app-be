@@ -13,5 +13,8 @@ class User(db.Model):
     created_at = db.Column(db.DateTime, default=datetime.utcnow)
     updated_at = db.Column(db.DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
     
+    def to_dict(self):
+        return {c.name: getattr(self, c.name) for c in self.__table__.columns}
+    
     def __repr__(self):
         return f'<User {self.name}>' 
