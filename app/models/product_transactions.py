@@ -1,7 +1,7 @@
 from app import db
 from datetime import datetime
-from models.user import User
-from models.product import Product
+from app.models.user import User
+from app.models.product import Product
 from uuid import uuid4
 
 class ProductTransaction(db.Model):
