@@ -1,4 +1,3 @@
-from flask import jsonify
 import uuid
 from werkzeug.utils import secure_filename
 from r2_config import s3, R2_BUCKET, R2_PUBLIC
