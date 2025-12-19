@@ -1,45 +1,56 @@
 def transform_data(data_list, relations=None):
-    """
-    data_list: List objek dari database (misal: pagination.items)
-    relations: Dictionary konfigurasi. 
-                Format: {'nama_relasi': ['field1', 'field2']}
-                Jika valuenya None atau [], maka akan mengambil seluruh data (to_dict).
-    """
     if relations is None:
         relations = {}
 
     results = []
 
     for item in data_list:
-        # 1. Ambil data utama (misal: Transaksi)
         item_dict = item.to_dict()
 
-        # 2. Loop melalui relasi yang diminta (misal: 'user', 'haircut')
         for relation_name, fields in relations.items():
-            
-            # Cek apakah item punya relasi tersebut (misal: item.user)
             if hasattr(item, relation_name):
-                related_obj = getattr(item, relation_name) # Ambil objeknya
+                related_obj = getattr(item, relation_name)
                 
-                if related_obj:
-                    # Jika user mendefinisikan field spesifik (misal: ['name', 'email'])
+                if related_obj is not None:
+                    # KASUS 1: Jika user minta field tertentu (custom fields)
                     if fields:
-                        rel_data = {}
-                        for field in fields:
-                            # Ambil nilai field dari related_obj
-                            # getattr(obj, 'name', None) -> aman jika field tidak ada
-                            rel_data[field] = getattr(related_obj, field, None)
-                        item_dict[relation_name] = rel_data
-                    
-                    # Jika user tidak mendefinisikan field (ambil semua via to_dict)
-                    else:
-                        if hasattr(related_obj, 'to_dict'):
-                            item_dict[relation_name] = related_obj.to_dict()
+                        # Jika related_obj adalah LIST (One-to-Many, misal: items)
+                        if isinstance(related_obj, list):
+                            rel_data_list = []
+                            for obj in related_obj:
+                                temp = {}
+                                for field in fields:
+                                    temp[field] = getattr(obj, field, None)
+                                rel_data_list.append(temp)
+                            item_dict[relation_name] = rel_data_list
+                        
+                        # Jika related_obj adalah SINGLE OBJECT (Many-to-One, misal: user)
                         else:
-                            # Fallback jika tidak ada to_dict, ambil string representasi
+                            rel_data = {}
+                            for field in fields:
+                                rel_data[field] = getattr(related_obj, field, None)
+                            item_dict[relation_name] = rel_data
+                    
+                    # KASUS 2: Jika user minta SEMUA field (list kosong [])
+                    else:
+                        # --- PERBAIKAN DI SINI ---
+                        
+                        # Cek apakah related_obj adalah LIST (seperti items)
+                        if isinstance(related_obj, list):
+                            # Loop dan jalankan to_dict() untuk setiap item di dalam list
+                            item_dict[relation_name] = [
+                                obj.to_dict() if hasattr(obj, 'to_dict') else str(obj) 
+                                for obj in related_obj
+                            ]
+                        
+                        # Cek apakah related_obj adalah Single Object (seperti user/product)
+                        elif hasattr(related_obj, 'to_dict'):
+                            item_dict[relation_name] = related_obj.to_dict()
+                        
+                        else:
+                            # Fallback jika bukan list dan gak punya to_dict
                             item_dict[relation_name] = str(related_obj)
                 else:
-                    # Jika relasi ada tapi datanya kosong (None)
                     item_dict[relation_name] = None
             
         results.append(item_dict)
