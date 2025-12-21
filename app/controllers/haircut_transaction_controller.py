@@ -64,7 +64,6 @@ def get_haircut_transaction_by_id(transaction_id):
 def get_haircut_transactions_by_user_id():
     try:
         user_id = get_jwt_identity()
-
         page = request.args.get("page", 1, type=int)
         limit = request.args.get("limit", 10, type=int)
 

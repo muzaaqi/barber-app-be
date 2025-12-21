@@ -178,8 +178,9 @@ def create_product_transaction():
             user_id=user_id,
             total_price=grand_total,
             expedition_service=data.get("expedition_service", "JNE"),
-            payment_method=data.get("payment_method", "transfer"),
-            payment_status="unpaid",
+            payment_method=data.get("payment_method", "cod"),
+            payment_status=data.get("payment_status", "unpaid"),
+            shipping_address=data.get("shipping_address"),
             expedition_status="pending"
         )
 
