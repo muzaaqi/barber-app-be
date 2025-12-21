@@ -1,6 +1,9 @@
 from app import db
-from datetime import datetime
+from datetime import datetime, timedelta
 from uuid import uuid4
+
+def get_wib_time():
+    return datetime.utcnow() + timedelta(hours=7)
 
 class Product(db.Model):
     __tablename__ = 'products'
@@ -12,8 +15,8 @@ class Product(db.Model):
     image_url = db.Column(db.String(255), nullable=True)
     image_key = db.Column(db.String(255), nullable=True)
     stock = db.Column(db.Integer, nullable=False, default=0)
-    created_at = db.Column(db.DateTime, default=datetime.utcnow)
-    updated_at = db.Column(db.DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
+    created_at = db.Column(db.DateTime, default=get_wib_time)
+    updated_at = db.Column(db.DateTime, default=get_wib_time, onupdate=get_wib_time)
     
     def to_dict(self):
         return {c.name: getattr(self, c.name) for c in self.__table__.columns}

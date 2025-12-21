@@ -1,8 +1,11 @@
 from app import db
-from datetime import datetime
+from datetime import datetime, timedelta
 from app.models.user import User
 from app.models.haircut import Haircut
 from uuid import uuid4
+
+def get_wib_time():
+    return datetime.utcnow() + timedelta(hours=7)
 
 class HaircutTransaction(db.Model):
     __tablename__ = 'haircut_transactions'
@@ -16,8 +19,8 @@ class HaircutTransaction(db.Model):
     reservation_status = db.Column(db.String(50), nullable=False, default='pending')
     payment_method = db.Column(db.String(50), nullable=False, default='cash')
     payment_status = db.Column(db.String(50), nullable=False, default='unpaid')
-    created_at = db.Column(db.DateTime, default=datetime.utcnow)
-    updated_at = db.Column(db.DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
+    created_at = db.Column(db.DateTime, default=get_wib_time)
+    updated_at = db.Column(db.DateTime, default=get_wib_time, onupdate=get_wib_time)
 
     user = db.relationship(User, backref=db.backref('haircut_transactions', lazy=True))
     haircut = db.relationship(Haircut, backref=db.backref('haircut_transactions', lazy=True))

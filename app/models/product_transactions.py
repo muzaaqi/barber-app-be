@@ -1,8 +1,11 @@
 from app import db
-from datetime import datetime
+from datetime import datetime, timedelta
 from app.models.user import User
 from app.models.product import Product
 from uuid import uuid4
+
+def get_wib_time():
+    return datetime.utcnow() + timedelta(hours=7)
 
 class ProductTransaction(db.Model):
     __tablename__ = 'product_transactions'
@@ -14,8 +17,8 @@ class ProductTransaction(db.Model):
     expedition_status = db.Column(db.String(50), default='pending')
     payment_method = db.Column(db.String(50), nullable=False, default='cash') 
     payment_status = db.Column(db.String(50), nullable=False, default='unpaid')
-    created_at = db.Column(db.DateTime, default=datetime.utcnow)
-    updated_at = db.Column(db.DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
+    created_at = db.Column(db.DateTime, default=get_wib_time)
+    updated_at = db.Column(db.DateTime, default=get_wib_time, onupdate=get_wib_time)
 
     user = db.relationship(User, backref=db.backref('product_transactions', lazy=True))
     items = db.relationship('TransactionItem', backref='transaction', lazy=True, cascade="all, delete-orphan")
@@ -61,8 +64,8 @@ class CartItem(db.Model):
     user_id = db.Column(db.String(36), db.ForeignKey(User.id), nullable=False)
     product_id = db.Column(db.String(36), db.ForeignKey(Product.id), nullable=False)
     quantity = db.Column(db.Integer, nullable=False, default=1)
-    created_at = db.Column(db.DateTime, default=datetime.utcnow)
-    updated_at = db.Column(db.DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
+    created_at = db.Column(db.DateTime, default=get_wib_time)
+    updated_at = db.Column(db.DateTime, default=get_wib_time, onupdate=get_wib_time)
 
     user = db.relationship(User, backref=db.backref('cart_items', lazy=True, cascade="all, delete-orphan"))
     product = db.relationship(Product, backref=db.backref('cart_items', lazy=True))
