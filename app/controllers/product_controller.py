@@ -118,7 +118,7 @@ def update_product(product_id):
             return response.not_found("Product not found")
 
         name = product_data.get("name", product.name)
-        price = product_data.get("price", product.price)
+        price = float(product_data.get("price", product.price))
         description = product_data.get("description", product.description)
         image = request.files.get("image")
         stock = int(product_data.get("stock", product.stock))
