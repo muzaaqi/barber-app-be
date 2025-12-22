@@ -13,7 +13,7 @@ def create_app():
     app = Flask(__name__)
     app.config.from_object(Config)
     
-    CORS(app, resources={r"/*": {"origins": ["https://bergas.muzaaqi.my.id", "http://localhost:3000", "http://127.0.0.1:5000"]}})
+    CORS(app, resources={r"/*": {"origins": Config.CORS_ALLOWED_ORIGINS}})
     JWTManager(app)
 
     db.init_app(app)

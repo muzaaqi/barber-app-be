@@ -3,6 +3,7 @@ import os
 basedir = os.path.abspath(os.path.dirname(__file__))
 
 class Config(object):
+    CORS_ALLOWED_ORIGINS = os.getenv('CORS_ALLOWED_ORIGINS', '').split(',')
     HOST = os.getenv('DB_HOST', 'localhost')
     PORT = os.getenv('DB_PORT', '3306')
     DATABASE = os.getenv('DB_DATABASE', 'default_db')
