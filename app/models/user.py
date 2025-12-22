@@ -1,9 +1,7 @@
 from app import db
 from datetime import datetime, timedelta
 from uuid import uuid4
-
-def get_wib_time():
-    return datetime.utcnow() + timedelta(hours=7)
+from app.modules.time import get_wib_time
 
 class User(db.Model):
     __tablename__ = 'users'
