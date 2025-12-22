@@ -4,6 +4,7 @@ from app.models.product import Product
 from app.modules import response
 from app.modules.transform import transform_data
 from app.modules.upload_r2 import delete_image, upload_image
+from app.modules.time import get_wib_time
 from app import db
 from app.models.user import User
 
@@ -16,7 +17,9 @@ def get_products():
         page = request.args.get("page", 1, type=int)
         limit = request.args.get("limit", 10, type=int)
 
-        pagination = Product.query.paginate(page=page, per_page=limit, error_out=False)
+        pagination = Product.query\
+            .filter(Product.deleted_at.is_(None)) \
+            .paginate(page=page, per_page=limit, error_out=False)
 
         data = transform_data(pagination.items)
 
@@ -156,6 +159,29 @@ def update_product(product_id):
 @product_bp.route('/<string:product_id>', methods=['DELETE'])
 @jwt_required()
 def delete_product(product_id):
+    try:
+        uid = get_jwt_identity()
+        current_user = User.query.get(uid)
+        if current_user.role != 'admin':
+            return response.unauthorized("Admin access required")
+        
+        product = Product.query.get(product_id)
+        if not product:
+            return response.not_found("Product not found")
+
+        product.deleted_at = get_wib_time()
+        db.session.commit()
+
+        return response.ok({}, "Product deleted successfully")
+
+    except Exception:
+        db.session.rollback()
+        return response.internal_server_error("Internal server error")
+
+
+@product_bp.route('/hard/<string:product_id>', methods=['DELETE'])
+@jwt_required()
+def hard_delete_product(product_id):
     try:
         uid = get_jwt_identity()
         current_user = User.query.get(uid)

@@ -4,6 +4,7 @@ from app.models.haircut import Haircut
 from app.modules import response
 from app.modules.transform import transform_data
 from app.modules.upload_r2 import delete_image, upload_image
+from app.modules.time import get_wib_time
 from app import db
 from app.models.user import User
 
@@ -17,6 +18,7 @@ def get_models():
         limit = request.args.get("limit", 10, type=int)
 
         pagination = Haircut.query \
+            .filter(Haircut.deleted_at.is_(None)) \
             .order_by(Haircut.choosen_count.desc()) \
             .paginate(page=page, per_page=limit, error_out=False)
 
@@ -152,9 +154,32 @@ def update_model(model_id):
         db.session.rollback()
         return response.internal_server_error("Internal server error")
     
-@haircut_bp.route('/<string:model_id>', methods=['DELETE'])
+
+@haircut_bp.route('/<string:haircut_id>', methods=['DELETE'])
 @jwt_required()
-def delete_model(model_id):
+def delete_haircut(haircut_id):
+    try:
+        uid = get_jwt_identity()
+        current_user = User.query.get(uid)
+        if current_user.role != 'admin':
+            return response.unauthorized("Admin access required")
+        
+        haircut = Haircut.query.get(haircut_id)
+        if not haircut:
+            return response.not_found("Haircut not found")
+
+        haircut.deleted_at = get_wib_time()
+        db.session.commit()
+
+        return response.ok({}, "Haircut deleted successfully")
+
+    except Exception:
+        db.session.rollback()
+        return response.internal_server_error("Internal server error")
+
+@haircut_bp.route('/hard/<string:model_id>', methods=['DELETE'])
+@jwt_required()
+def hard_delete_model(model_id):
     try:
         uid = get_jwt_identity()
         current_user = User.query.get(uid)

@@ -1,11 +1,8 @@
 from app import db
-from datetime import datetime, timedelta
 from app.models.user import User
 from app.models.product import Product
 from uuid import uuid4
-
-def get_wib_time():
-    return datetime.utcnow() + timedelta(hours=7)
+from app.modules.time import get_wib_time
 
 class ProductTransaction(db.Model):
     __tablename__ = 'product_transactions'
