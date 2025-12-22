@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Bergas API - Server Status</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      body {
+        font-family: "Inter", sans-serif;
+      }
+      .glass-panel {
+        background: rgba(255, 255, 255, 0.05);
+        backdrop-filter: blur(10px);
+        border: 1px solid rgba(255, 255, 255, 0.1);
+      }
+      .code-snippet {
+        font-family: "Courier New", Courier, monospace;
+      }
+    </style>
+  </head>
+  <body
+    class="bg-slate-900 text-slate-200 min-h-screen flex flex-col items-center justify-center relative overflow-hidden"
+  >
+    <div class="absolute top-0 left-0 w-full h-full overflow-hidden -z-10">
+      <div
+        class="absolute top-[-10%] left-[-10%] w-96 h-96 bg-blue-600 rounded-full mix-blend-multiply filter blur-3xl opacity-20 animate-blob"
+      ></div>
+      <div
+        class="absolute top-[-10%] right-[-10%] w-96 h-96 bg-emerald-600 rounded-full mix-blend-multiply filter blur-3xl opacity-20 animate-blob animation-delay-2000"
+      ></div>
+      <div
+        class="absolute bottom-[-20%] left-[20%] w-96 h-96 bg-purple-600 rounded-full mix-blend-multiply filter blur-3xl opacity-20 animate-blob animation-delay-4000"
+      ></div>
+    </div>
+
+    <main class="w-full max-w-4xl px-6">
+      <div class="flex justify-center mb-8">
+        <span
+          class="inline-flex items-center gap-2 px-3 py-1 rounded-full glass-panel text-emerald-400 text-sm font-medium border-emerald-500/30"
+        >
+          <span class="relative flex h-2 w-2">
+            <span
+              class="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"
+            ></span>
+            <span
+              class="relative inline-flex rounded-full h-2 w-2 bg-emerald-500"
+            ></span>
+          </span>
+          System Operational
+        </span>
+      </div>
+
+      <div class="text-center mb-12">
+        <h1
+          class="text-5xl md:text-6xl font-bold text-white tracking-tight mb-4"
+        >
+          Bergas
+          <span
+            class="text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-emerald-400"
+            >API Service</span
+          >
+        </h1>
+        <p class="text-lg text-slate-400 max-w-2xl mx-auto">
+          Secure, fast, and reliable backend infrastructure powering the Bergas
+          Barbershop ecosystem. Restricted access for authorized clients only.
+        </p>
+      </div>
+
+      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 mb-12">
+        <div
+          class="glass-panel p-6 rounded-xl hover:bg-white/5 transition duration-300"
+        >
+          <div class="text-blue-400 mb-2">
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              class="h-6 w-6"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke="currentColor"
+            >
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="2"
+                d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"
+              />
+            </svg>
+          </div>
+          <h3 class="text-lg font-semibold text-white mb-1">Users</h3>
+          <p class="text-sm text-slate-500">
+            Authentication & Profile Management
+          </p>
+          <div
+            class="mt-3 inline-block px-2 py-1 bg-slate-800 rounded text-xs text-blue-300 font-mono"
+          >
+            /api/users
+          </div>
+        </div>
+
+        <div
+          class="glass-panel p-6 rounded-xl hover:bg-white/5 transition duration-300"
+        >
+          <div class="text-emerald-400 mb-2">
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              class="h-6 w-6"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke="currentColor"
+            >
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="2"
+                d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z"
+              />
+            </svg>
+          </div>
+          <h3 class="text-lg font-semibold text-white mb-1">Products</h3>
+          <p class="text-sm text-slate-500">Inventory & Catalog Data</p>
+          <div
+            class="mt-3 inline-block px-2 py-1 bg-slate-800 rounded text-xs text-emerald-300 font-mono"
+          >
+            /api/products
+          </div>
+        </div>
+
+        <div
+          class="glass-panel p-6 rounded-xl hover:bg-white/5 transition duration-300"
+        >
+          <div class="text-purple-400 mb-2">
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              class="h-6 w-6"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke="currentColor"
+            >
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="2"
+                d="M14.121 14.121L19 19m-7-7l7-7m-7 7l-2.879 2.879M12 12L9.121 9.121m0 5.758a3 3 0 10-4.243 4.243 3 3 0 004.243-4.243zm0-5.758a3 3 0 10-4.243-4.243 3 3 0 004.243 4.243z"
+              />
+            </svg>
+          </div>
+          <h3 class="text-lg font-semibold text-white mb-1">Haircuts</h3>
+          <p class="text-sm text-slate-500">Styles & Service Types</p>
+          <div
+            class="mt-3 inline-block px-2 py-1 bg-slate-800 rounded text-xs text-purple-300 font-mono"
+          >
+            /api/haircuts
+          </div>
+        </div>
+      </div>
+
+      <footer class="text-center text-slate-600 text-sm">
+        <p>&copy; 2025 Bergas Barbershop API. All rights reserved.</p>
+        <p class="mt-1 text-xs">Protected by JWT Auth & Origin Policy</p>
+      </footer>
+    </main>
+  </body>
+</html>

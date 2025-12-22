@@ -1,4 +1,4 @@
-from flask import Flask
+from flask import Flask, render_template
 from flask_cors import CORS
 from flask_jwt_extended import JWTManager
 from flask_sqlalchemy import SQLAlchemy
@@ -18,6 +18,10 @@ def create_app():
 
     db.init_app(app)
     migrate.init_app(app, db)
+    
+    @app.route('/')
+    def index():
+        return render_template ('index.html')
 
     from app.routes import api
     app.register_blueprint(api)
