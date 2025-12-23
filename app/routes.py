@@ -1,6 +1,7 @@
 from flask import Blueprint, request, render_template
 from config import Config
 
+
 from app.controllers.haircut_controller import haircut_bp
 from app.controllers.user_controller import user_bp
 from app.controllers.product_controller import product_bp
@@ -16,10 +17,6 @@ def restrict_direct_access():
         return None
     request_key = request.headers.get('Permisson-Key')
     if Config.SECRET_API_KEY and request_key == Config.SECRET_API_KEY:
-        return None
-    origin = request.headers.get('Origin')
-    referer = request.headers.get('Referer')
-    if origin or referer:
         return None
     return render_template('403.html'), 403
 
