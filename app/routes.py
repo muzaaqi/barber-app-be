@@ -1,7 +1,6 @@
 from flask import Blueprint, request, render_template
 from config import Config
 
-# Import Controllers
 from app.controllers.haircut_controller import haircut_bp
 from app.controllers.user_controller import user_bp
 from app.controllers.product_controller import product_bp
