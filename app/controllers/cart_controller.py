@@ -85,6 +85,9 @@ def add_to_cart():
             
             existing_item.quantity = new_quantity
             message = "Cart updated successfully"
+            
+            db.session.commit()
+            return response.ok(existing_item.to_dict(), message)
 
         else:
             if quantity > product.stock:
@@ -97,9 +100,9 @@ def add_to_cart():
             )
             db.session.add(new_item)
             message = "Product added to cart"
-
-        db.session.commit()
-        return response.ok(None, message)
+            
+            db.session.commit()
+            return response.ok(new_item.to_dict(), message)
 
     except Exception as e:
         db.session.rollback()
@@ -129,7 +132,7 @@ def update_cart_item(cart_id):
         cart_item.quantity = new_quantity
         db.session.commit()
 
-        return response.ok(None, "Cart quantity updated")
+        return response.ok(cart_item.to_dict(), "Cart quantity updated")
 
     except Exception as e:
         db.session.rollback()

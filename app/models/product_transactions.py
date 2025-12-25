@@ -10,6 +10,7 @@ class ProductTransaction(db.Model):
     id = db.Column(db.String(36), primary_key=True, default=lambda: str(uuid4()))
     user_id = db.Column(db.String(36), db.ForeignKey(User.id), nullable=False)
     total_price = db.Column(db.Float, nullable=False)
+    expedition_cost = db.Column(db.Float, nullable=False)
     shipping_address = db.Column(db.String(500), nullable=False)
     expedition_service = db.Column(db.String(100), nullable=False)
     expedition_status = db.Column(db.String(50), default='pending')
