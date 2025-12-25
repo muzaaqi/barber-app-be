@@ -176,7 +176,7 @@ def create_product_transaction():
 
         new_transaction = ProductTransaction(
             user_id=user_id,
-            total_price=grand_total,
+            total_price=grand_total + float(data.get("expedition_cost", 0)),
             expedition_cost=data.get("expedition_cost", 0),
             expedition_service=data.get("expedition_service", "JNE"),
             payment_method=data.get("payment_method", "cod"),
