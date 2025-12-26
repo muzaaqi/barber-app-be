@@ -7,6 +7,7 @@ from app.models.product_transactions import ProductTransaction, TransactionItem,
 from app.models.user import User
 from app.models.product import Product
 from app.modules import response
+from app.modules.upload_r2 import upload_image
 from app.modules.transform import transform_data
 
 product_transaction_bp = Blueprint('product_transaction', __name__, url_prefix='/product-transactions')
@@ -218,6 +219,42 @@ def create_product_transaction():
     except Exception as e:
         db.session.rollback()
         print(f"Checkout Error: {e}")
+        return response.internal_server_error("Internal server error")
+
+@product_transaction_bp.route('/receipt/<string:transaction_id>', methods=['POST'])
+@jwt_required()
+def upload_receipt(transaction_id):
+    try:
+        user_id = get_jwt_identity()
+        
+        product_transaction = ProductTransaction.query.get(transaction_id)
+        if not product_transaction:
+            return response.not_found("Product transaction not found")
+        
+        if product_transaction.user_id != user_id:
+            return response.unauthorized("You are not authorized to upload receipt for this transaction")
+
+        file = request.files.get('receipt')
+        if not file:
+            return response.bad_request("No receipt file provided")
+        
+        result = upload_image(name=f"receipt-{transaction_id}", file=file, folder="product-receipts")
+        if not result:
+            return response.internal_server_error("Failed to upload receipt")
+        
+        product_transaction.receipt_url = result['url']
+        product_transaction.receipt_key = result['key']
+        product_transaction.payment_status = "received"
+        
+        db.session.commit()
+
+        return response.ok(
+            product_transaction.to_dict(),
+            "Receipt uploaded successfully"
+        )
+
+    except Exception:
+        db.session.rollback()
         return response.internal_server_error("Internal server error")
 
 

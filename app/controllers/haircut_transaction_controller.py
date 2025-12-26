@@ -6,6 +6,7 @@ from app.models.user import User
 from app.models.haircut import Haircut
 from app.modules import response
 from app.modules.transform import transform_data
+from app.modules.upload_r2 import upload_image
 from app import db
 
 haircut_transaction_bp = Blueprint('haircut_transaction', __name__, url_prefix='/haircut-transactions')
@@ -150,6 +151,43 @@ def update_haircut_transaction_status(transaction_id):
         return response.ok(
             haircut_transaction.to_dict(),
             "Haircut transaction updated successfully"
+        )
+
+    except Exception:
+        db.session.rollback()
+        return response.internal_server_error("Internal server error")
+
+@haircut_transaction_bp.route('/receipt/<string:transaction_id>', methods=['POST'])
+@jwt_required()
+def upload_receipt(transaction_id):
+    try:
+        user_id = get_jwt_identity()
+        
+        haircut_transaction = HaircutTransaction.query.get(transaction_id)
+        if not haircut_transaction:
+            return response.not_found("Haircut transaction not found")
+        
+        if haircut_transaction.user_id != user_id:
+            return response.unauthorized("You are not authorized to upload receipt for this transaction")
+
+        file = request.files.get('receipt')
+        print(file)
+        if not file:
+            return response.bad_request("No receipt file provided")
+        
+        result = upload_image(name=f"receipt-{transaction_id}", file=file, folder="receipts")
+        if not result:
+            return response.internal_server_error("Failed to upload receipt")
+        
+        haircut_transaction.receipt_url = result['url']
+        haircut_transaction.receipt_key = result['key']
+        haircut_transaction.payment_status = "received"
+        
+        db.session.commit()
+
+        return response.ok(
+            haircut_transaction.to_dict(),
+            "Receipt uploaded successfully"
         )
 
     except Exception:
