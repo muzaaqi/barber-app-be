@@ -14,8 +14,10 @@ class ProductTransaction(db.Model):
     shipping_address = db.Column(db.String(500), nullable=False)
     expedition_service = db.Column(db.String(100), nullable=False)
     expedition_status = db.Column(db.String(50), default='pending')
-    payment_method = db.Column(db.String(50), nullable=False, default='cash') 
+    payment_method = db.Column(db.String(50), nullable=False, default='qris') 
     payment_status = db.Column(db.String(50), nullable=False, default='unpaid')
+    receipt_url = db.Column(db.String(500), nullable=True)
+    receipt_key = db.Column(db.String(500), nullable=True)
     created_at = db.Column(db.DateTime, default=get_wib_time)
     updated_at = db.Column(db.DateTime, default=get_wib_time, onupdate=get_wib_time)
 

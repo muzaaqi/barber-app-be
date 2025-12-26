@@ -16,6 +16,8 @@ class HaircutTransaction(db.Model):
     reservation_status = db.Column(db.String(50), nullable=False, default='pending')
     payment_method = db.Column(db.String(50), nullable=False, default='cash')
     payment_status = db.Column(db.String(50), nullable=False, default='unpaid')
+    receipt_url = db.Column(db.String(500), nullable=True)
+    receipt_key = db.Column(db.String(500), nullable=True)
     created_at = db.Column(db.DateTime, default=get_wib_time)
     updated_at = db.Column(db.DateTime, default=get_wib_time, onupdate=get_wib_time)
 
