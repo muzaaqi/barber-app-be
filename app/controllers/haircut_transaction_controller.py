@@ -130,11 +130,6 @@ def create_haircut_transaction():
 @jwt_required()
 def update_haircut_transaction_status(transaction_id):
     try:
-        user_id = get_jwt_identity()
-        current_user = User.query.get(user_id)
-        if current_user.role != "admin":
-            return response.unauthorized("Admin access required")
-        
         haircut_transaction = HaircutTransaction.query.get(transaction_id)
         if not haircut_transaction:
             return response.not_found("Haircut transaction not found")
