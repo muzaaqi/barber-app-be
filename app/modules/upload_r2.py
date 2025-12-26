@@ -8,7 +8,7 @@ def upload_image(name: str, file, folder: str):
 
     ext = file.filename.rsplit(".", 1)[-1].lower()
     safe_name = secure_filename(name)
-    unique_name = f"{safe_name}-{uuid.uuid4().hex}.{ext}"
+    unique_name = f"{safe_name}.{ext}"
 
     key = f"{folder}/{unique_name}"
 
