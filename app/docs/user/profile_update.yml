@@ -1,0 +1,40 @@
+Update Profil User (Saya)
+---
+tags:
+  - User
+security:
+  - Bearer: []
+parameters:
+  - name: body
+    in: body
+    required: true
+    schema:
+      type: object
+      properties:
+        name:
+          type: string
+          example: "Budi Santoso Update"
+        email:
+          type: string
+          example: "budi_baru@example.com"
+responses:
+  200:
+    description: Profil berhasil diupdate
+    schema:
+      type: object
+      properties:
+        data:
+          type: object
+          properties:
+            id:
+              type: integer
+            name:
+              type: string
+            email:
+              type: string
+        message:
+          type: string
+  400:
+    description: Email sudah digunakan user lain
+  401:
+    description: Unauthorized

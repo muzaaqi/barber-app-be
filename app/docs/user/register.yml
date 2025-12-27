@@ -1,0 +1,44 @@
+Registrasi User Baru
+---
+tags:
+  - User
+parameters:
+  - name: body
+    in: body
+    required: true
+    schema:
+      type: object
+      required:
+        - name
+        - email
+        - password
+      properties:
+        name:
+          type: string
+          example: "Budi Santoso"
+        email:
+          type: string
+          example: "budi@example.com"
+        password:
+          type: string
+          description: Minimal 6 karakter
+          example: "rahasia123"
+responses:
+  201:
+    description: User berhasil didaftarkan
+    schema:
+      type: object
+      properties:
+        data:
+          type: object
+          properties:
+            id:
+              type: integer
+            name:
+              type: string
+            email:
+              type: string
+        message:
+          type: string
+  400:
+    description: Validasi gagal (Email sudah ada atau input kurang)

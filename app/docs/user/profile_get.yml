@@ -1,0 +1,29 @@
+Ambil Profil User (Saya)
+---
+tags:
+  - User
+security:
+  - Bearer: []
+responses:
+  200:
+    description: Berhasil mengambil data profil
+    schema:
+      type: object
+      properties:
+        data:
+          type: object
+          properties:
+            id:
+              type: integer
+            name:
+              type: string
+            email:
+              type: string
+            role:
+              type: string
+        message:
+          type: string
+  401:
+    description: Token tidak valid atau kadaluarsa
+  404:
+    description: User tidak ditemukan

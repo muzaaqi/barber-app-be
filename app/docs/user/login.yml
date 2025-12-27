@@ -1,0 +1,38 @@
+Login User
+---
+tags:
+  - User
+parameters:
+  - name: body
+    in: body
+    required: true
+    schema:
+      type: object
+      required:
+        - email
+        - password
+      properties:
+        email:
+          type: string
+          example: "budi@example.com"
+        password:
+          type: string
+          example: "rahasia123"
+responses:
+  200:
+    description: Login berhasil
+    schema:
+      type: object
+      properties:
+        data:
+          type: object
+          properties:
+            token:
+              type: string
+              description: JWT Access Token
+        message:
+          type: string
+  400:
+    description: Input tidak valid
+  401:
+    description: Email atau password salah
