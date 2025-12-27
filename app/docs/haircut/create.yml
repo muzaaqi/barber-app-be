@@ -1,0 +1,31 @@
+Buat Model Rambut Baru (Admin Only)
+---
+tags:
+  - Haircuts
+security:
+  - Bearer: []
+consumes:
+  - multipart/form-data
+parameters:
+  - name: name
+    in: formData
+    required: true
+    type: string
+    description: Nama gaya rambut
+  - name: description
+    in: formData
+    required: true
+    type: string
+    description: Deskripsi gaya rambut
+  - name: image
+    in: formData
+    required: true
+    type: file
+    description: File gambar (JPG/PNG)
+responses:
+  201:
+    description: Berhasil dibuat
+  400:
+    description: Input tidak valid atau gambar kosong
+  401:
+    description: Unauthorized (Bukan Admin)

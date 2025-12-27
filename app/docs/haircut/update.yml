@@ -1,0 +1,32 @@
+Update Model Rambut (Admin Only)
+---
+tags:
+  - Haircuts
+security:
+  - Bearer: []
+consumes:
+  - multipart/form-data
+parameters:
+  - name: model_id
+    in: path
+    required: true
+    type: string
+  - name: name
+    in: formData
+    type: string
+    description: Nama gaya rambut (Opsional)
+  - name: description
+    in: formData
+    type: string
+    description: Deskripsi gaya rambut (Opsional)
+  - name: image
+    in: formData
+    type: file
+    description: Upload gambar baru jika ingin mengganti (Opsional)
+responses:
+  200:
+    description: Berhasil diupdate
+  404:
+    description: Model tidak ditemukan
+  401:
+    description: Unauthorized

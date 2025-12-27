@@ -1,0 +1,45 @@
+Ambil Daftar Model Rambut
+---
+tags:
+  - Haircuts
+parameters:
+  - name: page
+    in: query
+    type: integer
+    default: 1
+    description: Halaman ke berapa
+  - name: limit
+    in: query
+    type: integer
+    default: 10
+    description: Jumlah data per halaman
+responses:
+  200:
+    description: Berhasil mengambil data
+    schema:
+      type: object
+      properties:
+        data:
+          type: array
+          items:
+            type: object
+            properties:
+              id:
+                type: integer
+              name:
+                type: string
+              description:
+                type: string
+              image_url:
+                type: string
+              choosen_count:
+                type: integer
+        pagination:
+          type: object
+          properties:
+            page:
+              type: integer
+            limit:
+              type: integer
+            total:
+              type: integer
