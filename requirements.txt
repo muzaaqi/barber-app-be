@@ -7,3 +7,5 @@ pymysql
 boto3
 flask-jwt-extended
 cryptography
+flask-socketio
+gevent
