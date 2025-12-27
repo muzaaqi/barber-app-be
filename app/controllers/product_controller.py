@@ -1,5 +1,6 @@
 from flask import Blueprint, request
 from flask_jwt_extended import (jwt_required, get_jwt_identity)
+from flasgger import swag_from
 from app.models.product import Product
 from app.modules import response
 from app.modules.transform import transform_data
@@ -12,6 +13,7 @@ product_bp = Blueprint('product', __name__, url_prefix='/products')
 
 
 @product_bp.route('/', methods=['GET'])
+@swag_from('../docs/product/get_list.yml')
 def get_products():
     try:
         page = request.args.get("page", 1, type=int)
@@ -37,6 +39,7 @@ def get_products():
 
 
 @product_bp.route('/<string:product_id>', methods=['GET'])
+@swag_from('../docs/product/get_detail.yml')
 def get_product_by_id(product_id):
     try:
         product = Product.query.get(product_id)
@@ -54,6 +57,7 @@ def get_product_by_id(product_id):
 
 @product_bp.route('/', methods=['POST'])
 @jwt_required()
+@swag_from('../docs/product/create.yml')
 def create_product():
     try:
         uid = get_jwt_identity()
@@ -105,6 +109,7 @@ def create_product():
 
 @product_bp.route('/<string:product_id>', methods=['PUT'])
 @jwt_required()
+@swag_from('../docs/product/update.yml')
 def update_product(product_id):
     try:
         uid = get_jwt_identity()
@@ -113,7 +118,7 @@ def update_product(product_id):
             return response.unauthorized("Admin access required")
         
         product_data = request.form.to_dict()
-        if not product_data:
+        if not product_data and not request.files:
             return response.bad_request("Request body is empty")
         
         product = Product.query.get(product_id)
@@ -121,10 +126,14 @@ def update_product(product_id):
             return response.not_found("Product not found")
 
         name = product_data.get("name", product.name)
-        price = float(product_data.get("price", product.price))
+        price_raw = product_data.get("price", product.price)
+        price = float(price_raw)
+        
         description = product_data.get("description", product.description)
         image = request.files.get("image")
-        stock = int(product_data.get("stock", product.stock))
+        
+        stock_raw = product_data.get("stock", product.stock)
+        stock = int(stock_raw)
 
         if image:
             upload_result = upload_image(name, image, "products")
@@ -142,7 +151,7 @@ def update_product(product_id):
         product.name = name
         product.price = price
         product.description = description
-        product.stock = int(stock)
+        product.stock = stock
 
         db.session.commit()
 
@@ -158,6 +167,7 @@ def update_product(product_id):
 
 @product_bp.route('/<string:product_id>', methods=['DELETE'])
 @jwt_required()
+@swag_from('../docs/product/delete_soft.yml')
 def delete_product(product_id):
     try:
         uid = get_jwt_identity()
@@ -181,6 +191,7 @@ def delete_product(product_id):
 
 @product_bp.route('/hard/<string:product_id>', methods=['DELETE'])
 @jwt_required()
+@swag_from('../docs/product/delete_hard.yml')
 def hard_delete_product(product_id):
     try:
         uid = get_jwt_identity()
