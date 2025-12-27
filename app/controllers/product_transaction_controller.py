@@ -1,5 +1,6 @@
 from flask import Blueprint, request
 from flask_jwt_extended import (jwt_required, get_jwt_identity)
+from app.extensions import socketio
 from sqlalchemy.orm import joinedload
 from datetime import datetime
 from app import db
@@ -211,6 +212,8 @@ def create_product_transaction():
 
         result = new_transaction.to_dict()
         
+        socketio.emit('new_product_transaction_created', result, to='admin_room')
+        
         return response.created(
             result,
             "Transaction created successfully"
@@ -247,6 +250,8 @@ def upload_receipt(transaction_id):
         product_transaction.payment_status = "received"
         
         db.session.commit()
+        
+        socketio.emit('product_transaction_receipt_uploaded', product_transaction.to_dict(), to='admin_room')
 
         return response.ok(
             product_transaction.to_dict(),

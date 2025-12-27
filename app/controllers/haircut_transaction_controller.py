@@ -1,6 +1,7 @@
 from flask import Blueprint, request
 from flask_jwt_extended import (jwt_required, get_jwt_identity)
 from sqlalchemy.orm import joinedload
+from app.extensions import socketio
 from app.models.haircut_transactions import HaircutTransaction
 from app.models.user import User
 from app.models.haircut import Haircut
@@ -116,6 +117,13 @@ def create_haircut_transaction():
 
         db.session.add(new_transaction)
         db.session.commit()
+        
+        emit_payload = {
+            "id": new_transaction.id,
+            "user_id": new_transaction.user_id,
+        }
+        
+        socketio.emit('new_haircut_transaction_created', emit_payload, to='admin_room')
 
         return response.created(
             new_transaction.to_dict(),
@@ -142,6 +150,13 @@ def update_haircut_transaction_status(transaction_id):
         haircut_transaction.payment_status = transaction_data.get("payment_status", haircut_transaction.payment_status)
 
         db.session.commit()
+        
+        if transaction_data.get("reservation_status") == "completed":
+            emit_payload = {
+                "id": haircut_transaction.id,
+                "user_id": haircut_transaction.user_id,
+            }
+            socketio.emit('haircut_transaction_completed', emit_payload, to='admin_room')
 
         return response.ok(
             haircut_transaction.to_dict(),
