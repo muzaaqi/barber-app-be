@@ -8,13 +8,14 @@ from flask_jwt_extended import (
 from flasgger import swag_from
 from app.models.user import User
 from app.modules import response
+from app.modules.swagger_utils import get_doc_path
 from app import db
 
 user_bp = Blueprint("user", __name__, url_prefix="/user")
 
 
 @user_bp.route("/register", methods=["POST"])
-@swag_from('app/docs/user/register.yml')
+@swag_from(get_doc_path('user/register.yml'))
 def register():
     try:
         data = request.get_json()
@@ -59,7 +60,7 @@ def register():
 
 
 @user_bp.route("/login", methods=["POST"])
-@swag_from('app/docs/user/login.yml')
+@swag_from(get_doc_path('user/login.yml'))
 def login():
     try:
         data = request.get_json()
@@ -90,7 +91,7 @@ def login():
 
 @user_bp.route("/me", methods=["GET"])
 @jwt_required()
-@swag_from('app/docs/user/profile_get.yml')
+@swag_from(get_doc_path('user/profile_get.yml'))
 def get_profile():
     try:
         uid = get_jwt_identity()
@@ -114,7 +115,7 @@ def get_profile():
 
 @user_bp.route("/me", methods=["PUT"])
 @jwt_required()
-@swag_from('app/docs/user/profile_update.yml')
+@swag_from(get_doc_path('user/profile_update.yml'))
 def update_profile():
     try:
         uid = get_jwt_identity()
@@ -153,7 +154,7 @@ def update_profile():
 
 @user_bp.route("/me/password", methods=["PUT"])
 @jwt_required()
-@swag_from('app/docs/user/password_update.yml')
+@swag_from(get_doc_path('user/password_update.yml'))
 def change_password():
     try:
         uid = get_jwt_identity()

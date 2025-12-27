@@ -12,13 +12,14 @@ from app.models.product import Product
 from app.modules import response
 from app.modules.upload_r2 import upload_image
 from app.modules.transform import transform_data
+from app.modules.swagger_utils import get_doc_path
 
 product_transaction_bp = Blueprint('product_transaction', __name__, url_prefix='/product-transactions')
 
 
 @product_transaction_bp.route('/', methods=['GET'])
 @jwt_required()
-@swag_from('app/docs/product_transaction/get_list.yml')
+@swag_from(get_doc_path('product_transaction/get_list.yml'))
 def get_product_transactions():
     try:
         user_id = get_jwt_identity()
@@ -64,7 +65,7 @@ def get_product_transactions():
 
 @product_transaction_bp.route('/<string:transaction_id>', methods=['GET'])
 @jwt_required()
-@swag_from('app/docs/product_transaction/get_detail.yml')
+@swag_from(get_doc_path('product_transaction/get_detail.yml'))
 def get_product_transaction_by_id(transaction_id):
     try:
         user_id = get_jwt_identity()
@@ -96,7 +97,7 @@ def get_product_transaction_by_id(transaction_id):
 
 @product_transaction_bp.route('/me', methods=['GET'])
 @jwt_required()
-@swag_from('app/docs/product_transaction/get_user_list.yml')
+@swag_from(get_doc_path('product_transaction/get_user_list.yml'))
 def get_my_transactions():
     try:
         user_id = get_jwt_identity()
@@ -128,7 +129,7 @@ def get_my_transactions():
 
 @product_transaction_bp.route('/checkout', methods=['POST'])
 @jwt_required()
-@swag_from('app/docs/product_transaction/checkout.yml')
+@swag_from(get_doc_path('product_transaction/checkout.yml'))
 def create_product_transaction():
     try:
         user_id = get_jwt_identity()
@@ -232,7 +233,7 @@ def create_product_transaction():
 
 @product_transaction_bp.route('/receipt/<string:transaction_id>', methods=['POST'])
 @jwt_required()
-@swag_from('app/docs/product_transaction/upload_receipt.yml')
+@swag_from(get_doc_path('product_transaction/upload_receipt.yml'))
 def upload_receipt(transaction_id):
     try:
         user_id = get_jwt_identity()
@@ -272,7 +273,7 @@ def upload_receipt(transaction_id):
 
 @product_transaction_bp.route('/<string:transaction_id>', methods=['PUT'])
 @jwt_required()
-@swag_from('app/docs/product_transaction/update_status.yml')
+@swag_from(get_doc_path('product_transaction/update_status.yml'))
 def update_transaction_status(transaction_id):
     try:
         product_transaction = ProductTransaction.query.get(transaction_id)
@@ -303,7 +304,7 @@ def update_transaction_status(transaction_id):
 
 @product_transaction_bp.route('/<string:transaction_id>', methods=['DELETE'])
 @jwt_required()
-@swag_from('app/docs/product_transaction/delete.yml')
+@swag_from(get_doc_path('product_transaction/delete.yml'))
 def delete_product_transaction(transaction_id):
     try:
         product_transaction = ProductTransaction.query \

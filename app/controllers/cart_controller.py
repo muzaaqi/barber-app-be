@@ -2,9 +2,9 @@ from flask import Blueprint, request
 from flask_jwt_extended import jwt_required, get_jwt_identity
 from sqlalchemy.orm import joinedload
 from flasgger import swag_from
-
 from app import db
 from app.modules import response
+from app.modules.swagger_utils import get_doc_path
 from app.models.product_transactions import CartItem
 from app.models.product import Product
 
@@ -13,7 +13,7 @@ cart_bp = Blueprint('cart', __name__, url_prefix='/carts')
 
 @cart_bp.route('/', methods=['GET'])
 @jwt_required()
-@swag_from('app/docs/cart/get.yml')
+@swag_from(get_doc_path('cart/get.yml'))
 def get_my_cart():
     try:
         user_id = get_jwt_identity()
@@ -59,7 +59,7 @@ def get_my_cart():
 
 @cart_bp.route('/', methods=['POST'])
 @jwt_required()
-@swag_from('app/docs/cart/add.yml')
+@swag_from(get_doc_path('cart/add.yml'))
 def add_to_cart():
     try:
         user_id = get_jwt_identity()
@@ -114,7 +114,7 @@ def add_to_cart():
 
 @cart_bp.route('/<string:cart_id>', methods=['PUT'])
 @jwt_required()
-@swag_from('app/docs/cart/update.yml')
+@swag_from(get_doc_path('cart/update.yml'))
 def update_cart_item(cart_id):
     try:
         user_id = get_jwt_identity()
@@ -143,7 +143,7 @@ def update_cart_item(cart_id):
 
 @cart_bp.route('/<string:cart_id>', methods=['DELETE'])
 @jwt_required()
-@swag_from('app/docs/cart/delete.yml')
+@swag_from(get_doc_path('cart/delete.yml'))
 def delete_cart_item(cart_id):
     try:
         user_id = get_jwt_identity()

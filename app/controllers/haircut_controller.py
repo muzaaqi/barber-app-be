@@ -6,6 +6,7 @@ from app.modules import response
 from app.modules.transform import transform_data
 from app.modules.upload_r2 import delete_image, upload_image
 from app.modules.time import get_wib_time
+from app.modules.swagger_utils import get_doc_path
 from app import db
 from app.models.user import User
 
@@ -13,7 +14,7 @@ haircut_bp = Blueprint('haircut', __name__, url_prefix='/haircuts')
 
 
 @haircut_bp.route('/', methods=['GET'])
-@swag_from('app/docs/haircut/get_list.yml')
+@swag_from(get_doc_path('haircut/get_list.yml'))
 def get_models():
     try:
         page = request.args.get("page", 1, type=int)
@@ -40,7 +41,7 @@ def get_models():
 
 
 @haircut_bp.route('/<string:model_id>', methods=['GET'])
-@swag_from('app/docs/haircut/get_detail.yml')
+@swag_from(get_doc_path('haircut/get_detail.yml'))
 def get_model_by_id(model_id):
     try:
         haircut_model = Haircut.query.get(model_id)
@@ -58,7 +59,7 @@ def get_model_by_id(model_id):
 
 @haircut_bp.route('/', methods=['POST'])
 @jwt_required()
-@swag_from('app/docs/haircut/create.yml')
+@swag_from(get_doc_path('haircut/create.yml'))
 def create_model():
     try:
         uid = get_jwt_identity()
@@ -109,7 +110,7 @@ def create_model():
 
 @haircut_bp.route('/<string:model_id>', methods=['PUT'])
 @jwt_required()
-@swag_from('app/docs/haircut/update.yml')
+@swag_from(get_doc_path('haircut/update.yml'))
 def update_model(model_id):
     try:
         uid = get_jwt_identity()
@@ -159,7 +160,7 @@ def update_model(model_id):
 
 @haircut_bp.route('/<string:haircut_id>', methods=['DELETE'])
 @jwt_required()
-@swag_from('app/docs/haircut/delete_soft.yml')
+@swag_from(get_doc_path('haircut/delete_soft.yml'))
 def delete_haircut(haircut_id):
     try:
         uid = get_jwt_identity()
@@ -182,7 +183,7 @@ def delete_haircut(haircut_id):
 
 @haircut_bp.route('/hard/<string:model_id>', methods=['DELETE'])
 @jwt_required()
-@swag_from('app/docs/haircut/delete_hard.yml')
+@swag_from(get_doc_path('haircut/delete_hard.yml'))
 def hard_delete_model(model_id):
     try:
         uid = get_jwt_identity()
