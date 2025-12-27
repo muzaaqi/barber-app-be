@@ -1,0 +1,18 @@
+Hapus Permanen Produk (Hard Delete)
+---
+tags:
+  - Products
+security:
+  - Bearer: []
+parameters:
+  - name: product_id
+    in: path
+    required: true
+    type: string
+responses:
+  200:
+    description: Berhasil dihapus permanen
+  404:
+    description: Produk tidak ditemukan
+  401:
+    description: Unauthorized

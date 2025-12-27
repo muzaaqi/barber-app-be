@@ -1,0 +1,36 @@
+Update Produk (Admin Only)
+---
+tags:
+  - Products
+security:
+  - Bearer: []
+consumes:
+  - multipart/form-data
+parameters:
+  - name: product_id
+    in: path
+    required: true
+    type: string
+  - name: name
+    in: formData
+    type: string
+  - name: price
+    in: formData
+    type: number
+  - name: description
+    in: formData
+    type: string
+  - name: stock
+    in: formData
+    type: integer
+  - name: image
+    in: formData
+    type: file
+    description: Upload gambar baru jika ingin mengganti
+responses:
+  200:
+    description: Berhasil diupdate
+  404:
+    description: Produk tidak ditemukan
+  401:
+    description: Unauthorized

@@ -1,0 +1,42 @@
+Buat Produk Baru (Admin Only)
+---
+tags:
+  - Products
+security:
+  - Bearer: []
+consumes:
+  - multipart/form-data
+parameters:
+  - name: name
+    in: formData
+    required: true
+    type: string
+    description: Nama produk
+  - name: price
+    in: formData
+    required: true
+    type: number
+    description: Harga produk (e.g. 50000)
+  - name: description
+    in: formData
+    required: false
+    type: string
+    description: Deskripsi produk
+  - name: stock
+    in: formData
+    required: false
+    type: integer
+    default: 0
+    description: Stok awal
+  - name: image
+    in: formData
+    required: true
+    type: file
+    description: Gambar produk (JPG/PNG)
+responses:
+  201:
+    description: Produk berhasil dibuat
+  400:
+    description: Input tidak valid atau gambar kosong
+  401:
+    description: Unauthorized
