@@ -1,0 +1,30 @@
+Update Jumlah Barang di Keranjang
+---
+tags:
+  - Cart
+security:
+  - Bearer: []
+parameters:
+  - name: cart_id
+    in: path
+    required: true
+    type: string
+    description: ID Item di Keranjang (Bukan Product ID)
+  - name: body
+    in: body
+    required: true
+    schema:
+      type: object
+      required:
+        - quantity
+      properties:
+        quantity:
+          type: integer
+          example: 5
+responses:
+  200:
+    description: Quantity berhasil diupdate
+  400:
+    description: Stok tidak cukup
+  404:
+    description: Item tidak ditemukan di keranjang

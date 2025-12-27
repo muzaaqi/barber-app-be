@@ -1,0 +1,29 @@
+Tambah Barang ke Keranjang
+---
+tags:
+  - Cart
+security:
+  - Bearer: []
+parameters:
+  - name: body
+    in: body
+    required: true
+    schema:
+      type: object
+      required:
+        - product_id
+      properties:
+        product_id:
+          type: integer
+          example: 1
+        quantity:
+          type: integer
+          default: 1
+          example: 2
+responses:
+  200:
+    description: Berhasil ditambahkan atau diupdate quantity-nya
+  400:
+    description: Stok tidak cukup atau input salah
+  404:
+    description: Produk tidak ditemukan

@@ -1,0 +1,36 @@
+Lihat Keranjang Belanja Saya
+---
+tags:
+  - Cart
+security:
+  - Bearer: []
+responses:
+  200:
+    description: Berhasil mengambil data keranjang
+    schema:
+      type: object
+      properties:
+        items:
+          type: array
+          items:
+            type: object
+            properties:
+              cart_id:
+                type: integer
+              product_name:
+                type: string
+              price:
+                type: number
+              quantity:
+                type: integer
+              subtotal:
+                type: number
+        summary:
+          type: object
+          properties:
+            total_items:
+              type: integer
+            grand_total:
+              type: number
+  401:
+    description: Unauthorized

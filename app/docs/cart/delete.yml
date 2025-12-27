@@ -1,0 +1,16 @@
+Hapus Barang dari Keranjang
+---
+tags:
+  - Cart
+security:
+  - Bearer: []
+parameters:
+  - name: cart_id
+    in: path
+    required: true
+    type: string
+responses:
+  200:
+    description: Berhasil dihapus dari keranjang
+  404:
+    description: Item tidak ditemukan
