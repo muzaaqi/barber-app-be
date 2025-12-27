@@ -9,3 +9,4 @@ flask-jwt-extended
 cryptography
 flask-socketio
 gevent
+flasgger
