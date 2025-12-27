@@ -6,7 +6,6 @@ from flask_jwt_extended import (
     get_jwt_identity
 )
 from flasgger import swag_from
-
 from app.models.user import User
 from app.modules import response
 from app import db
