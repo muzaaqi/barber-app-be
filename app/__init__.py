@@ -1,13 +1,9 @@
 from flask import Flask, render_template
 from flask_cors import CORS
 from flask_jwt_extended import JWTManager
-from flask_sqlalchemy import SQLAlchemy
-from flask_migrate import Migrate
+from app.extensions import db, migrate, socketio
 from config import Config
 from app import models
-
-db = SQLAlchemy()
-migrate = Migrate()
 
 def create_app():
     app = Flask(__name__)
@@ -18,6 +14,7 @@ def create_app():
 
     db.init_app(app)
     migrate.init_app(app, db)
+    socketio.init_app(app)
     
     @app.route('/')
     def index():
@@ -25,5 +22,8 @@ def create_app():
 
     from app.routes import api
     app.register_blueprint(api)
+    
+    with app.app_context():
+        from app import events
 
     return app
