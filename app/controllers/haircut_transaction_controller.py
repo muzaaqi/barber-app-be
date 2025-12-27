@@ -14,7 +14,7 @@ haircut_transaction_bp = Blueprint('haircut_transaction', __name__, url_prefix='
 
 @haircut_transaction_bp.route('/', methods=['GET'])
 @jwt_required()
-@swag_from('../docs/haircut_transaction/get_list.yml')
+@swag_from('app/docs/haircut_transaction/get_list.yml')
 def get_haircut_transactions():
     try:
         uid = get_jwt_identity()
@@ -44,7 +44,7 @@ def get_haircut_transactions():
 
 @haircut_transaction_bp.route('/<string:transaction_id>', methods=['GET'])
 @jwt_required()
-@swag_from('../docs/haircut_transaction/get_detail.yml')
+@swag_from('app/docs/haircut_transaction/get_detail.yml')
 def get_haircut_transaction_by_id(transaction_id):
     try:
         haircut_transaction = HaircutTransaction.query \
@@ -65,7 +65,7 @@ def get_haircut_transaction_by_id(transaction_id):
 
 @haircut_transaction_bp.route('/user', methods=['GET'])
 @jwt_required()
-@swag_from('../docs/haircut_transaction/get_user_list.yml')
+@swag_from('app/docs/haircut_transaction/get_user_list.yml')
 def get_haircut_transactions_by_user_id():
     try:
         user_id = get_jwt_identity()
@@ -94,7 +94,7 @@ def get_haircut_transactions_by_user_id():
 
 @haircut_transaction_bp.route('/', methods=['POST'])
 @jwt_required()
-@swag_from('../docs/haircut_transaction/create.yml')
+@swag_from('app/docs/haircut_transaction/create.yml')
 def create_haircut_transaction():
     try:
         user_id = get_jwt_identity()
@@ -138,7 +138,7 @@ def create_haircut_transaction():
 
 @haircut_transaction_bp.route('/<string:transaction_id>', methods=['PUT'])
 @jwt_required()
-@swag_from('../docs/haircut_transaction/update_status.yml')
+@swag_from('app/docs/haircut_transaction/update_status.yml')
 def update_haircut_transaction_status(transaction_id):
     try:
         haircut_transaction = HaircutTransaction.query.get(transaction_id)
@@ -172,7 +172,7 @@ def update_haircut_transaction_status(transaction_id):
 
 @haircut_transaction_bp.route('/receipt/<string:transaction_id>', methods=['POST'])
 @jwt_required()
-@swag_from('../docs/haircut_transaction/upload_receipt.yml')
+@swag_from('app/docs/haircut_transaction/upload_receipt.yml')
 def upload_receipt(transaction_id):
     try:
         user_id = get_jwt_identity()
@@ -209,7 +209,7 @@ def upload_receipt(transaction_id):
 
 @haircut_transaction_bp.route('/<string:transaction_id>', methods=['DELETE'])
 @jwt_required()
-@swag_from('../docs/haircut_transaction/delete.yml')
+@swag_from('app/docs/haircut_transaction/delete.yml')
 def delete_haircut_transaction(transaction_id):
     try:
         user_id = get_jwt_identity()

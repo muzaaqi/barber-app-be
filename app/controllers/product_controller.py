@@ -13,7 +13,7 @@ product_bp = Blueprint('product', __name__, url_prefix='/products')
 
 
 @product_bp.route('/', methods=['GET'])
-@swag_from('../docs/product/get_list.yml')
+@swag_from('app/docs/product/get_list.yml')
 def get_products():
     try:
         page = request.args.get("page", 1, type=int)
@@ -39,7 +39,7 @@ def get_products():
 
 
 @product_bp.route('/<string:product_id>', methods=['GET'])
-@swag_from('../docs/product/get_detail.yml')
+@swag_from('app/docs/product/get_detail.yml')
 def get_product_by_id(product_id):
     try:
         product = Product.query.get(product_id)
@@ -57,7 +57,7 @@ def get_product_by_id(product_id):
 
 @product_bp.route('/', methods=['POST'])
 @jwt_required()
-@swag_from('../docs/product/create.yml')
+@swag_from('app/docs/product/create.yml')
 def create_product():
     try:
         uid = get_jwt_identity()
@@ -109,7 +109,7 @@ def create_product():
 
 @product_bp.route('/<string:product_id>', methods=['PUT'])
 @jwt_required()
-@swag_from('../docs/product/update.yml')
+@swag_from('app/docs/product/update.yml')
 def update_product(product_id):
     try:
         uid = get_jwt_identity()
@@ -167,7 +167,7 @@ def update_product(product_id):
 
 @product_bp.route('/<string:product_id>', methods=['DELETE'])
 @jwt_required()
-@swag_from('../docs/product/delete_soft.yml')
+@swag_from('app/docs/product/delete_soft.yml')
 def delete_product(product_id):
     try:
         uid = get_jwt_identity()
@@ -191,7 +191,7 @@ def delete_product(product_id):
 
 @product_bp.route('/hard/<string:product_id>', methods=['DELETE'])
 @jwt_required()
-@swag_from('../docs/product/delete_hard.yml')
+@swag_from('app/docs/product/delete_hard.yml')
 def hard_delete_product(product_id):
     try:
         uid = get_jwt_identity()
