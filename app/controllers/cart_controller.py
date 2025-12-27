@@ -1,6 +1,8 @@
 from flask import Blueprint, request
 from flask_jwt_extended import jwt_required, get_jwt_identity
 from sqlalchemy.orm import joinedload
+from flasgger import swag_from
+
 from app import db
 from app.modules import response
 from app.models.product_transactions import CartItem
@@ -11,6 +13,7 @@ cart_bp = Blueprint('cart', __name__, url_prefix='/carts')
 
 @cart_bp.route('/', methods=['GET'])
 @jwt_required()
+@swag_from('../docs/cart/get.yml')
 def get_my_cart():
     try:
         user_id = get_jwt_identity()
@@ -51,12 +54,12 @@ def get_my_cart():
             }
         }, "Successfully retrieved cart")
 
-    except Exception as e:
-        print(e)
+    except Exception:
         return response.internal_server_error("Internal server error")
 
 @cart_bp.route('/', methods=['POST'])
 @jwt_required()
+@swag_from('../docs/cart/add.yml')
 def add_to_cart():
     try:
         user_id = get_jwt_identity()
@@ -104,14 +107,14 @@ def add_to_cart():
             db.session.commit()
             return response.ok(new_item.to_dict(), message)
 
-    except Exception as e:
+    except Exception:
         db.session.rollback()
-        print(e)
         return response.internal_server_error("Internal server error")
 
 
 @cart_bp.route('/<string:cart_id>', methods=['PUT'])
 @jwt_required()
+@swag_from('../docs/cart/update.yml')
 def update_cart_item(cart_id):
     try:
         user_id = get_jwt_identity()
@@ -134,12 +137,13 @@ def update_cart_item(cart_id):
 
         return response.ok(cart_item.to_dict(), "Cart quantity updated")
 
-    except Exception as e:
+    except Exception:
         db.session.rollback()
         return response.internal_server_error("Internal server error")
 
 @cart_bp.route('/<string:cart_id>', methods=['DELETE'])
 @jwt_required()
+@swag_from('../docs/cart/delete.yml')
 def delete_cart_item(cart_id):
     try:
         user_id = get_jwt_identity()
