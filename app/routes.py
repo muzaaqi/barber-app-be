@@ -13,6 +13,10 @@ api = Blueprint('api', __name__, url_prefix='/api')
 def restrict_direct_access():
     if request.method == "OPTIONS":
         return None
+    
+    if request.path.endswith('apispec_1.json') or \
+        (request.referrer and '/apidocs' in request.referrer):
+        return None
 
     request_key = request.headers.get('Permission-Key')
     if Config.SECRET_API_KEY and request_key == Config.SECRET_API_KEY:
