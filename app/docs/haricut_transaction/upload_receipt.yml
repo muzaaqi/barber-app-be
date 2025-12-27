@@ -1,0 +1,25 @@
+Upload Bukti Pembayaran (Receipt)
+---
+tags:
+  - Haircut Transactions
+security:
+  - Bearer: []
+consumes:
+  - multipart/form-data
+parameters:
+  - name: transaction_id
+    in: path
+    required: true
+    type: string
+  - name: receipt
+    in: formData
+    required: true
+    type: file
+    description: Gambar bukti transfer
+responses:
+  200:
+    description: Bukti berhasil diupload
+  400:
+    description: File tidak ada
+  401:
+    description: Bukan pemilik transaksi

@@ -1,0 +1,45 @@
+Buat Transaksi Baru
+---
+tags:
+  - Haircut Transactions
+security:
+  - Bearer: []
+parameters:
+  - name: body
+    in: body
+    required: true
+    schema:
+      type: object
+      required:
+        - haircut_id
+        - hairwash
+        - total_price
+        - reservation_time
+        - payment_method
+      properties:
+        haircut_id:
+          type: integer
+          example: 1
+        hairwash:
+          type: string
+          description: Kirim string "True" atau "False"
+          example: "True"
+        total_price:
+          type: number
+          example: 50000
+        reservation_time:
+          type: string
+          format: date-time
+          example: "2025-12-30 14:00:00"
+        payment_method:
+          type: string
+          enum: ["cash", "qris"]
+          example: "cash"
+        payment_status:
+          type: string
+          example: "unpaid"
+responses:
+  201:
+    description: Transaksi berhasil dibuat
+  400:
+    description: Input tidak valid

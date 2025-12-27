@@ -1,0 +1,16 @@
+Ambil Detail Transaksi
+---
+tags:
+  - Haircut Transactions
+security:
+  - Bearer: []
+parameters:
+  - name: transaction_id
+    in: path
+    required: true
+    type: string
+responses:
+  200:
+    description: Data ditemukan
+  404:
+    description: Transaksi tidak ditemukan

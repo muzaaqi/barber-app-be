@@ -1,0 +1,16 @@
+Hapus Transaksi (Admin Only)
+---
+tags:
+  - Haircut Transactions
+security:
+  - Bearer: []
+parameters:
+  - name: transaction_id
+    in: path
+    required: true
+    type: string
+responses:
+  200:
+    description: Berhasil dihapus
+  401:
+    description: Unauthorized

@@ -1,0 +1,28 @@
+Update Status Transaksi
+---
+tags:
+  - Haircut Transactions
+security:
+  - Bearer: []
+parameters:
+  - name: transaction_id
+    in: path
+    required: true
+    type: string
+  - name: body
+    in: body
+    required: true
+    schema:
+      type: object
+      properties:
+        reservation_status:
+          type: string
+          enum: ["pending", "confirmed", "completed", "cancelled"]
+        payment_status:
+          type: string
+          enum: ["unpaid", "paid", "received"]
+responses:
+  200:
+    description: Status berhasil diupdate
+  404:
+    description: Transaksi tidak ditemukan
