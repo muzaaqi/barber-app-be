@@ -1,5 +1,6 @@
 from flask import Blueprint, request
 from flask_jwt_extended import (jwt_required , get_jwt_identity)
+from flasgger import swag_from
 from app.models.haircut import Haircut
 from app.modules import response
 from app.modules.transform import transform_data
@@ -12,6 +13,7 @@ haircut_bp = Blueprint('haircut', __name__, url_prefix='/haircuts')
 
 
 @haircut_bp.route('/', methods=['GET'])
+@swag_from('../docs/haircut/get_list.yml')
 def get_models():
     try:
         page = request.args.get("page", 1, type=int)
@@ -38,6 +40,7 @@ def get_models():
 
 
 @haircut_bp.route('/<string:model_id>', methods=['GET'])
+@swag_from('../docs/haircut/get_detail.yml')
 def get_model_by_id(model_id):
     try:
         haircut_model = Haircut.query.get(model_id)
@@ -55,6 +58,7 @@ def get_model_by_id(model_id):
 
 @haircut_bp.route('/', methods=['POST'])
 @jwt_required()
+@swag_from('../docs/haircut/create.yml')
 def create_model():
     try:
         uid = get_jwt_identity()
@@ -105,6 +109,7 @@ def create_model():
 
 @haircut_bp.route('/<string:model_id>', methods=['PUT'])
 @jwt_required()
+@swag_from('../docs/haircut/update.yml')
 def update_model(model_id):
     try:
         uid = get_jwt_identity()
@@ -114,9 +119,6 @@ def update_model(model_id):
         
         model_data = request.form.to_dict()
         
-        if not model_data:
-            return response.bad_request("Request body is empty")
-
         haircut_model = Haircut.query.get(model_id)
         if not haircut_model:
             return response.not_found("Haircut model not found")
@@ -157,6 +159,7 @@ def update_model(model_id):
 
 @haircut_bp.route('/<string:haircut_id>', methods=['DELETE'])
 @jwt_required()
+@swag_from('../docs/haircut/delete_soft.yml')
 def delete_haircut(haircut_id):
     try:
         uid = get_jwt_identity()
@@ -179,6 +182,7 @@ def delete_haircut(haircut_id):
 
 @haircut_bp.route('/hard/<string:model_id>', methods=['DELETE'])
 @jwt_required()
+@swag_from('../docs/haircut/delete_hard.yml')
 def hard_delete_model(model_id):
     try:
         uid = get_jwt_identity()
