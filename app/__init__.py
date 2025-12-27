@@ -28,5 +28,9 @@ def create_app():
     
     with app.app_context():
         from app import events
+    
+    @app.errorhandler(404)
+    def not_found(error):
+        return render_template('404.html'), 404
 
     return app
