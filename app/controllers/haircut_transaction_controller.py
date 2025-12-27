@@ -154,7 +154,7 @@ def update_haircut_transaction_status(transaction_id):
         if transaction_data.get("reservation_status") == "completed":
             emit_payload = {
                 "id": haircut_transaction.id,
-                "user_id": haircut_transaction.user_id,
+                "status": haircut_transaction.reservation_status
             }
             socketio.emit('haircut_transaction_completed', emit_payload, to='admin_room')
 
