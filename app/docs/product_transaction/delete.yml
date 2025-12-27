@@ -1,0 +1,17 @@
+Batalkan/Hapus Transaksi
+---
+tags:
+  - Product Transactions
+security:
+  - Bearer: []
+description: Menghapus transaksi akan **mengembalikan stok** produk secara otomatis.
+parameters:
+  - name: transaction_id
+    in: path
+    required: true
+    type: string
+responses:
+  200:
+    description: Transaksi dihapus dan stok dikembalikan
+  404:
+    description: Transaksi tidak ditemukan

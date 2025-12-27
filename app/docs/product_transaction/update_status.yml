@@ -1,0 +1,28 @@
+Update Status Transaksi (Admin)
+---
+tags:
+  - Product Transactions
+security:
+  - Bearer: []
+parameters:
+  - name: transaction_id
+    in: path
+    required: true
+    type: string
+  - name: body
+    in: body
+    required: true
+    schema:
+      type: object
+      properties:
+        payment_status:
+          type: string
+          enum: ["unpaid", "paid", "received"]
+        expedition_status:
+          type: string
+          enum: ["pending", "processed", "shipped", "delivered"]
+responses:
+  200:
+    description: Status berhasil diupdate
+  404:
+    description: Transaksi tidak ditemukan

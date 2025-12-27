@@ -1,0 +1,44 @@
+Checkout Pesanan (Direct Buy / Cart)
+---
+tags:
+  - Product Transactions
+security:
+  - Bearer: []
+description: >
+  Jika `product_id` dan `quantity` dikirim, maka akan dianggap **Direct Buy** (beli langsung).
+  Jika tidak dikirim, sistem akan otomatis mengambil barang dari **Keranjang (Cart)** user.
+parameters:
+  - name: body
+    in: body
+    required: true
+    schema:
+      type: object
+      required:
+        - shipping_address
+      properties:
+        product_id:
+          type: string
+          description: (Opsional) Isi jika ingin beli langsung tanpa lewat keranjang.
+        quantity:
+          type: integer
+          description: (Opsional) Jumlah barang (untuk direct buy).
+        shipping_address:
+          type: string
+          example: "Jl. Mawar No. 10, Jakarta"
+        expedition_service:
+          type: string
+          default: "JNE"
+          example: "JNE"
+        expedition_cost:
+          type: number
+          default: 0
+          example: 15000
+        payment_method:
+          type: string
+          enum: ["cod", "transfer", "qris"]
+          default: "cod"
+responses:
+  201:
+    description: Transaksi berhasil dibuat & Stok berkurang
+  400:
+    description: Stok tidak cukup atau Keranjang kosong

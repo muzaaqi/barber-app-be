@@ -1,0 +1,18 @@
+Ambil Riwayat Transaksi Saya
+---
+tags:
+  - Product Transactions
+security:
+  - Bearer: []
+parameters:
+  - name: page
+    in: query
+    type: integer
+    default: 1
+  - name: limit
+    in: query
+    type: integer
+    default: 10
+responses:
+  200:
+    description: Berhasil mengambil riwayat transaksi

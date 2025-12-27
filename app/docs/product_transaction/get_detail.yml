@@ -1,0 +1,18 @@
+Ambil Detail Transaksi Produk
+---
+tags:
+  - Product Transactions
+security:
+  - Bearer: []
+parameters:
+  - name: transaction_id
+    in: path
+    required: true
+    type: string
+responses:
+  200:
+    description: Data ditemukan
+  404:
+    description: Transaksi tidak ditemukan
+  401:
+    description: Unauthorized (Bukan pemilik atau admin)

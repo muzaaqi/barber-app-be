@@ -1,0 +1,23 @@
+Upload Bukti Transfer Produk
+---
+tags:
+  - Product Transactions
+security:
+  - Bearer: []
+consumes:
+  - multipart/form-data
+parameters:
+  - name: transaction_id
+    in: path
+    required: true
+    type: string
+  - name: receipt
+    in: formData
+    required: true
+    type: file
+    description: File gambar bukti transfer
+responses:
+  200:
+    description: Bukti berhasil diupload
+  401:
+    description: Bukan pemilik transaksi
