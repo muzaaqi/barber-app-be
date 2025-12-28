@@ -161,6 +161,12 @@ def update_haircut_transaction_status(transaction_id):
                 "status": haircut_transaction.reservation_status
             }
             socketio.emit('haircut_transaction_completed', emit_payload, to='admin_room')
+        
+        socketio.emit('haircut_transaction_status_updated', {
+            "id": haircut_transaction.id,
+            "reservation_status": haircut_transaction.reservation_status,
+            "payment_status": haircut_transaction.payment_status
+        }, to = f'user_{haircut_transaction.user_id}')
 
         return response.ok(
             haircut_transaction.to_dict(),

@@ -296,12 +296,18 @@ def update_transaction_status(transaction_id):
 
         product_transaction.updated_at = datetime.utcnow()
         db.session.commit()
+        
+        socketio.emit('product_transaction_status_updated', {
+            "id": product_transaction.id,
+            "payment_status": product_transaction.payment_status,
+            "expedition_status": product_transaction.expedition_status
+        }, to = f'user_{product_transaction.user_id}')
 
         return response.ok(
             product_transaction.to_dict(),
             "Transaction status updated successfully"
         )
-    except Exception as e:
+    except Exception:
         db.session.rollback()
         return response.internal_server_error("Internal server error")
 
