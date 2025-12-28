@@ -189,7 +189,7 @@ def upload_receipt(transaction_id):
         if not file:
             return response.bad_request("No receipt file provided")
         
-        result = upload_image(name=f"receipt-{transaction_id}", file=file, folder="receipts")
+        result = upload_image(name=f"receipt-{transaction_id}", file=file, folder="haircut-receipts")
         if not result:
             return response.internal_server_error("Failed to upload receipt")
         
@@ -198,6 +198,11 @@ def upload_receipt(transaction_id):
         haircut_transaction.payment_status = "received"
         
         db.session.commit()
+        
+        socketio.emit('haircut_receipt_uploaded', {
+            "id": haircut_transaction.id,
+            "receipt_url": haircut_transaction.receipt_url
+        }, to='admin_room')
 
         return response.ok(
             haircut_transaction.to_dict(),

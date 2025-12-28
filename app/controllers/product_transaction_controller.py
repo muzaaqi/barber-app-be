@@ -216,13 +216,14 @@ def create_product_transaction():
                 db.session.delete(cart_obj)
 
         db.session.commit()
-
-        result = new_transaction.to_dict()
         
-        socketio.emit('new_product_transaction_created', result, to='admin_room')
+        socketio.emit('new_product_transaction_created', {
+            "id": new_transaction.id,
+            "total_price": new_transaction.total_price
+        }, to='admin_room')
         
         return response.created(
-            result,
+            new_transaction.to_dict(),
             "Transaction created successfully"
         )
 
@@ -259,7 +260,10 @@ def upload_receipt(transaction_id):
         
         db.session.commit()
         
-        socketio.emit('product_transaction_receipt_uploaded', product_transaction.to_dict(), to='admin_room')
+        socketio.emit('product_transaction_receipt_uploaded', {
+            "id": product_transaction.id,
+            "receipt_url": product_transaction.receipt_url
+        }, to='admin_room')
 
         return response.ok(
             product_transaction.to_dict(),
