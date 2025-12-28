@@ -205,7 +205,7 @@ def upload_receipt(transaction_id):
         
         db.session.commit()
         
-        socketio.emit('haircut_receipt_uploaded', {
+        socketio.emit('haircut_transaction_receipt_uploaded', {
             "id": haircut_transaction.id,
             "receipt_url": haircut_transaction.receipt_url
         }, to='admin_room')
