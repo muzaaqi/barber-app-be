@@ -10,6 +10,14 @@ def handle_connect():
 def handle_disconnect():
     print(f"[X] CLIENT DISCONNECTED: {request.sid}")
 
+@socketio.on('join_admin_room')
+def handle_join_admin_room(data):
+    room_name = data
+    if room_name:
+        join_room(room_name)
+        print(f"[->] Admin joined room: {room_name}")
+        emit('room_joined', {'message': f"Joined room {room_name}"}, to=room_name)
+
 @socketio.on('join_user_room')
 def handle_join_user_room(data):
     user_id = data.get('user_id')
