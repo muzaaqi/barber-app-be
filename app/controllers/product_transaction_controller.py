@@ -17,7 +17,7 @@ from app.modules.swagger_utils import get_doc_path
 product_transaction_bp = Blueprint('product_transaction', __name__, url_prefix='/product-transactions')
 
 
-@product_transaction_bp.route('/', methods=['GET'])
+@product_transaction_bp.route('/', methods=['GET'], strict_slashes=False)
 @jwt_required()
 @swag_from(get_doc_path('product_transaction/get_list.yml'))
 def get_product_transactions():
@@ -63,7 +63,7 @@ def get_product_transactions():
         return response.internal_server_error("Internal server error")
 
 
-@product_transaction_bp.route('/<string:transaction_id>', methods=['GET'])
+@product_transaction_bp.route('/<string:transaction_id>', methods=['GET'], strict_slashes=False)
 @jwt_required()
 @swag_from(get_doc_path('product_transaction/get_detail.yml'))
 def get_product_transaction_by_id(transaction_id):
@@ -95,7 +95,7 @@ def get_product_transaction_by_id(transaction_id):
         print(e)
         return response.internal_server_error("Internal server error")
 
-@product_transaction_bp.route('/me', methods=['GET'])
+@product_transaction_bp.route('/me', methods=['GET'], strict_slashes=False)
 @jwt_required()
 @swag_from(get_doc_path('product_transaction/get_user_list.yml'))
 def get_my_transactions():
@@ -127,7 +127,7 @@ def get_my_transactions():
         return response.internal_server_error("Internal server error")
 
 
-@product_transaction_bp.route('/checkout', methods=['POST'])
+@product_transaction_bp.route('/checkout', methods=['POST'], strict_slashes=False)
 @jwt_required()
 @swag_from(get_doc_path('product_transaction/checkout.yml'))
 def create_product_transaction():
@@ -232,7 +232,7 @@ def create_product_transaction():
         print(f"Checkout Error: {e}")
         return response.internal_server_error("Internal server error")
 
-@product_transaction_bp.route('/receipt/<string:transaction_id>', methods=['POST'])
+@product_transaction_bp.route('/receipt/<string:transaction_id>', methods=['POST'], strict_slashes=False)
 @jwt_required()
 @swag_from(get_doc_path('product_transaction/upload_receipt.yml'))
 def upload_receipt(transaction_id):
@@ -275,7 +275,7 @@ def upload_receipt(transaction_id):
         return response.internal_server_error("Internal server error")
 
 
-@product_transaction_bp.route('/<string:transaction_id>', methods=['PUT'])
+@product_transaction_bp.route('/<string:transaction_id>', methods=['PUT'], strict_slashes=False)
 @jwt_required()
 @swag_from(get_doc_path('product_transaction/update_status.yml'))
 def update_transaction_status(transaction_id):
@@ -312,7 +312,7 @@ def update_transaction_status(transaction_id):
         return response.internal_server_error("Internal server error")
 
 
-@product_transaction_bp.route('/<string:transaction_id>', methods=['DELETE'])
+@product_transaction_bp.route('/<string:transaction_id>', methods=['DELETE'], strict_slashes=False)
 @jwt_required()
 @swag_from(get_doc_path('product_transaction/delete.yml'))
 def delete_product_transaction(transaction_id):

@@ -11,7 +11,7 @@ from app.models.product import Product
 cart_bp = Blueprint('cart', __name__, url_prefix='/carts')
 
 
-@cart_bp.route('/', methods=['GET'])
+@cart_bp.route('/', methods=['GET'], strict_slashes=False)
 @jwt_required()
 @swag_from(get_doc_path('cart/get.yml'))
 def get_my_cart():
@@ -57,7 +57,7 @@ def get_my_cart():
     except Exception:
         return response.internal_server_error("Internal server error")
 
-@cart_bp.route('/', methods=['POST'])
+@cart_bp.route('/', methods=['POST'], strict_slashes=False)
 @jwt_required()
 @swag_from(get_doc_path('cart/add.yml'))
 def add_to_cart():
@@ -112,7 +112,7 @@ def add_to_cart():
         return response.internal_server_error("Internal server error")
 
 
-@cart_bp.route('/<string:cart_id>', methods=['PUT'])
+@cart_bp.route('/<string:cart_id>', methods=['PUT'], strict_slashes=False)
 @jwt_required()
 @swag_from(get_doc_path('cart/update.yml'))
 def update_cart_item(cart_id):
@@ -141,7 +141,7 @@ def update_cart_item(cart_id):
         db.session.rollback()
         return response.internal_server_error("Internal server error")
 
-@cart_bp.route('/<string:cart_id>', methods=['DELETE'])
+@cart_bp.route('/<string:cart_id>', methods=['DELETE'], strict_slashes=False)
 @jwt_required()
 @swag_from(get_doc_path('cart/delete.yml'))
 def delete_cart_item(cart_id):

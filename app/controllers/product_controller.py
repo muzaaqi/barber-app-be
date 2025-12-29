@@ -13,7 +13,7 @@ from app.models.user import User
 product_bp = Blueprint('product', __name__, url_prefix='/products')
 
 
-@product_bp.route('/', methods=['GET'])
+@product_bp.route('/', methods=['GET'], strict_slashes=False)
 @swag_from(get_doc_path('product/get_list.yml'))
 def get_products():
     try:
@@ -39,7 +39,7 @@ def get_products():
         return response.internal_server_error("Internal server error")
 
 
-@product_bp.route('/<string:product_id>', methods=['GET'])
+@product_bp.route('/<string:product_id>', methods=['GET'], strict_slashes=False)
 @swag_from(get_doc_path('product/get_detail.yml'))
 def get_product_by_id(product_id):
     try:
@@ -56,7 +56,7 @@ def get_product_by_id(product_id):
         return response.internal_server_error("Internal server error")
 
 
-@product_bp.route('/', methods=['POST'])
+@product_bp.route('/', methods=['POST'], strict_slashes=False)
 @jwt_required()
 @swag_from(get_doc_path('product/create.yml'))
 def create_product():
@@ -108,7 +108,7 @@ def create_product():
         return response.internal_server_error("Internal server error")
 
 
-@product_bp.route('/<string:product_id>', methods=['PUT'])
+@product_bp.route('/<string:product_id>', methods=['PUT'], strict_slashes=False)
 @jwt_required()
 @swag_from(get_doc_path('product/update.yml'))
 def update_product(product_id):
@@ -166,7 +166,7 @@ def update_product(product_id):
         return response.internal_server_error("Internal server error")
 
 
-@product_bp.route('/<string:product_id>', methods=['DELETE'])
+@product_bp.route('/<string:product_id>', methods=['DELETE'], strict_slashes=False)
 @jwt_required()
 @swag_from(get_doc_path('product/delete_soft.yml'))
 def delete_product(product_id):
@@ -190,7 +190,7 @@ def delete_product(product_id):
         return response.internal_server_error("Internal server error")
 
 
-@product_bp.route('/hard/<string:product_id>', methods=['DELETE'])
+@product_bp.route('/hard/<string:product_id>', methods=['DELETE'], strict_slashes=False)
 @jwt_required()
 @swag_from(get_doc_path('product/delete_hard.yml'))
 def hard_delete_product(product_id):

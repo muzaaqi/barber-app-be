@@ -13,7 +13,7 @@ from app import db
 
 haircut_transaction_bp = Blueprint('haircut_transaction', __name__, url_prefix='/haircut-transactions')
 
-@haircut_transaction_bp.route('/', methods=['GET'])
+@haircut_transaction_bp.route('/', methods=['GET'], strict_slashes=False)
 @jwt_required()
 @swag_from(get_doc_path('haircut_transaction/get_list.yml'))
 def get_haircut_transactions():
@@ -43,7 +43,7 @@ def get_haircut_transactions():
     except Exception:
         return response.internal_server_error("Internal server error")
 
-@haircut_transaction_bp.route('/<string:transaction_id>', methods=['GET'])
+@haircut_transaction_bp.route('/<string:transaction_id>', methods=['GET'], strict_slashes=False)
 @jwt_required()
 @swag_from(get_doc_path('haircut_transaction/get_detail.yml'))
 def get_haircut_transaction_by_id(transaction_id):
@@ -64,7 +64,7 @@ def get_haircut_transaction_by_id(transaction_id):
     except Exception:
         return response.internal_server_error("Internal server error")
 
-@haircut_transaction_bp.route('/user', methods=['GET'])
+@haircut_transaction_bp.route('/user', methods=['GET'], strict_slashes=False)
 @jwt_required()
 @swag_from(get_doc_path('haircut_transaction/get_user_list.yml'))
 def get_haircut_transactions_by_user_id():
@@ -93,7 +93,7 @@ def get_haircut_transactions_by_user_id():
     except Exception:
         return response.internal_server_error("Internal server error")
 
-@haircut_transaction_bp.route('/', methods=['POST'])
+@haircut_transaction_bp.route('/', methods=['POST'], strict_slashes=False)
 @jwt_required()
 @swag_from(get_doc_path('haircut_transaction/create.yml'))
 def create_haircut_transaction():
@@ -137,7 +137,7 @@ def create_haircut_transaction():
         db.session.rollback()
         return response.internal_server_error("Internal server error")
 
-@haircut_transaction_bp.route('/<string:transaction_id>', methods=['PUT'])
+@haircut_transaction_bp.route('/<string:transaction_id>', methods=['PUT'], strict_slashes=False)
 @jwt_required()
 @swag_from(get_doc_path('haircut_transaction/update_status.yml'))
 def update_haircut_transaction_status(transaction_id):
@@ -177,7 +177,7 @@ def update_haircut_transaction_status(transaction_id):
         db.session.rollback()
         return response.internal_server_error("Internal server error")
 
-@haircut_transaction_bp.route('/receipt/<string:transaction_id>', methods=['POST'])
+@haircut_transaction_bp.route('/receipt/<string:transaction_id>', methods=['POST'], strict_slashes=False)
 @jwt_required()
 @swag_from(get_doc_path('haircut_transaction/upload_receipt.yml'))
 def upload_receipt(transaction_id):
@@ -219,7 +219,7 @@ def upload_receipt(transaction_id):
         db.session.rollback()
         return response.internal_server_error("Internal server error")
 
-@haircut_transaction_bp.route('/<string:transaction_id>', methods=['DELETE'])
+@haircut_transaction_bp.route('/<string:transaction_id>', methods=['DELETE'], strict_slashes=False)
 @jwt_required()
 @swag_from(get_doc_path('haircut_transaction/delete.yml'))
 def delete_haircut_transaction(transaction_id):

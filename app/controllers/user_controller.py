@@ -16,7 +16,7 @@ from app import db
 user_bp = Blueprint("user", __name__, url_prefix="/user")
 
 
-@user_bp.route("/", methods=["GET"])
+@user_bp.route("/", methods=["GET"], strict_slashes=False)
 @jwt_required()
 @swag_from(get_doc_path('user/get_list.yml'))
 def get_users():
@@ -54,7 +54,7 @@ def get_users():
     except Exception:
         return response.internal_server_error("Internal server error")
 
-@user_bp.route("/register", methods=["POST"])
+@user_bp.route("/register", methods=["POST"], strict_slashes=False)
 @swag_from(get_doc_path('user/register.yml'))
 def register():
     try:
@@ -99,7 +99,7 @@ def register():
         return response.internal_server_error("Internal server error")
 
 
-@user_bp.route("/login", methods=["POST"])
+@user_bp.route("/login", methods=["POST"], strict_slashes=False)
 @swag_from(get_doc_path('user/login.yml'))
 def login():
     try:
@@ -129,7 +129,7 @@ def login():
         return response.internal_server_error("Internal server error")
 
 
-@user_bp.route("/me", methods=["GET"])
+@user_bp.route("/me", methods=["GET"], strict_slashes=False)
 @jwt_required()
 @swag_from(get_doc_path('user/profile_get.yml'))
 def get_profile():
@@ -153,7 +153,7 @@ def get_profile():
     except Exception:
         return response.internal_server_error("Internal server error")
 
-@user_bp.route("/me", methods=["PUT"])
+@user_bp.route("/me", methods=["PUT"], strict_slashes=False)
 @jwt_required()
 @swag_from(get_doc_path('user/profile_update.yml'))
 def update_profile():
@@ -192,7 +192,7 @@ def update_profile():
         db.session.rollback()
         return response.internal_server_error("Internal server error")
 
-@user_bp.route("/me/password", methods=["PUT"])
+@user_bp.route("/me/password", methods=["PUT"], strict_slashes=False)
 @jwt_required()
 @swag_from(get_doc_path('user/password_update.yml'))
 def change_password():

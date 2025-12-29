@@ -13,7 +13,7 @@ from app.models.user import User
 haircut_bp = Blueprint('haircut', __name__, url_prefix='/haircuts')
 
 
-@haircut_bp.route('/', methods=['GET'])
+@haircut_bp.route('/', methods=['GET'], strict_slashes=False)
 @swag_from(get_doc_path('haircut/get_list.yml'))
 def get_models():
     try:
@@ -40,7 +40,7 @@ def get_models():
         return response.internal_server_error("Internal server error")
 
 
-@haircut_bp.route('/<string:model_id>', methods=['GET'])
+@haircut_bp.route('/<string:model_id>', methods=['GET'], strict_slashes=False)
 @swag_from(get_doc_path('haircut/get_detail.yml'))
 def get_model_by_id(model_id):
     try:
@@ -57,7 +57,7 @@ def get_model_by_id(model_id):
         return response.internal_server_error("Internal server error")
 
 
-@haircut_bp.route('/', methods=['POST'])
+@haircut_bp.route('/', methods=['POST'], strict_slashes=False)
 @jwt_required()
 @swag_from(get_doc_path('haircut/create.yml'))
 def create_model():
@@ -108,7 +108,7 @@ def create_model():
         return response.internal_server_error("Internal server error")
 
 
-@haircut_bp.route('/<string:model_id>', methods=['PUT'])
+@haircut_bp.route('/<string:model_id>', methods=['PUT'], strict_slashes=False)
 @jwt_required()
 @swag_from(get_doc_path('haircut/update.yml'))
 def update_model(model_id):
@@ -158,7 +158,7 @@ def update_model(model_id):
         return response.internal_server_error("Internal server error")
     
 
-@haircut_bp.route('/<string:haircut_id>', methods=['DELETE'])
+@haircut_bp.route('/<string:haircut_id>', methods=['DELETE'], strict_slashes=False)
 @jwt_required()
 @swag_from(get_doc_path('haircut/delete_soft.yml'))
 def delete_haircut(haircut_id):
@@ -181,7 +181,7 @@ def delete_haircut(haircut_id):
         db.session.rollback()
         return response.internal_server_error("Internal server error")
 
-@haircut_bp.route('/hard/<string:model_id>', methods=['DELETE'])
+@haircut_bp.route('/hard/<string:model_id>', methods=['DELETE'], strict_slashes=False)
 @jwt_required()
 @swag_from(get_doc_path('haircut/delete_hard.yml'))
 def hard_delete_model(model_id):
