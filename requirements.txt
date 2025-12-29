@@ -9,5 +9,6 @@ flask-jwt-extended
 cryptography
 flask-socketio
 gevent
+gevent-websocket
 flasgger
 gunicorn
