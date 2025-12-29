@@ -11,7 +11,7 @@ def create_app():
     app = Flask(__name__)
     app.config.from_object(Config)
     
-    CORS(app, resources={r"/*": {"origins": Config.CORS_ALLOWED_ORIGINS}})
+    CORS(app, supports_credentials=True, resources={r"/*": {"origins": Config.CORS_ALLOWED_ORIGINS, "methods": ["GET", "POST", "PUT", "DELETE", "OPTIONS"], "allow_headers": "*"}})
     JWTManager(app)
 
     db.init_app(app)
