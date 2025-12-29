@@ -5,14 +5,54 @@ from flask_jwt_extended import (
     jwt_required,
     get_jwt_identity
 )
+from sqlalchemy.orm import load_only
 from flasgger import swag_from
 from app.models.user import User
 from app.modules import response
+from app.modules.transform import transform_data
 from app.modules.swagger_utils import get_doc_path
 from app import db
 
 user_bp = Blueprint("user", __name__, url_prefix="/user")
 
+
+@user_bp.route("/", methods=["GET"])
+@jwt_required()
+@swag_from(get_doc_path('user/get_list.yml'))
+def get_users():
+    try:
+        user_id = get_jwt_identity()
+        user = User.query.get(user_id)
+        if not user or user.role != "admin":
+            return response.unauthorized("Unauthorized access")
+        page = request.args.get("page", 1, type=int)
+        limit = request.args.get("limit", 10, type=int)
+        
+        pagination = User.query \
+            .options(load_only(User.id, User.name, User.email, User.role, User.created_at, User.updated_at)) \
+            .paginate(page=page, per_page=limit, error_out=False)
+        
+        data = [{
+                "id": item.id,
+                "name": item.name,
+                "email": item.email,
+                "role": item.role,
+                "created_at": item.created_at.isoformat() if item.created_at else None,
+                "updated_at": item.updated_at.isoformat() if item.updated_at else None
+            } for item in pagination.items
+        ]
+
+        return response.ok({
+            "data": data,
+            "pagination": {
+                "page": page,
+                "limit": limit,
+                "total": pagination.total
+            }
+        }, "Successfully retrieved users")
+
+    except Exception:
+        return response.internal_server_error("Internal server error")
 
 @user_bp.route("/register", methods=["POST"])
 @swag_from(get_doc_path('user/register.yml'))
