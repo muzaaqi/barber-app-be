@@ -20,7 +20,7 @@ parameters:
           enum: ["unpaid", "paid", "received"]
         expedition_status:
           type: string
-          enum: ["pending", "processed", "shipped", "delivered"]
+          enum: ["pending", "processing", "shipping", "delivered"]
 responses:
   200:
     description: Status berhasil diupdate

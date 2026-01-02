@@ -1,7 +1,7 @@
 Get User List
 ---
 tags:
-  - User Management
+  - User
 summary: Get a paginated list of users
 description: Retrieve a list of registered users with pagination. This endpoint is restricted to administrators only.
 security:
